@@ -1,0 +1,15 @@
+# Node stuff
+node_modules/
+package-lock.json
+
+# Private stuff
+*.db
+**.env
+**.env.*
+!.env.example
+!.env.test
+
+# Upload thing
+uploads/
+upload/
+output/
