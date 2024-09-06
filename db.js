@@ -1,4 +1,7 @@
 import Database from "better-sqlite3";
+import { config } from "dotenv";
+
+config();
 
 const DB_URL = process.env.DB_URL;
 
@@ -29,7 +32,7 @@ const insertQuery = `
   );
 `;
 
-/** @returns {[number, string | null]} */
+/** @returns {[[ number, string ], string | null]} */
 export function insertStudent(student) {
   try {
     const res = db
@@ -70,9 +73,9 @@ export function insertStudent(student) {
         student.studentimg
       );
 
-    return [res.changes, null];
+    return [[res.changes, res.lastInsertRowid], null];
   } catch (e) {
     console.log("Err:", e);
-    return [0, e];
+    return [[0, null], e];
   }
 }

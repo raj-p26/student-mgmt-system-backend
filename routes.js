@@ -33,13 +33,13 @@ export function addStudent(req, res) {
   req.body.id = req.uuid;
   console.log({ ...req.body, ...files });
 
-  const [rowsAffected, err] = db.insertStudent({ ...req.body, ...files });
+  const [_, err] = db.insertStudent({ ...req.body, ...files });
 
   if (err != null) {
     res.send({ status: "failed", message: err });
   }
 
-  res.send({ todo: "Add students", rowsAffected });
+  res.send({ todo: "Add students", uuid: req.uuid });
 }
 
 /**
