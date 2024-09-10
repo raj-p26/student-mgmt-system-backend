@@ -1,5 +1,7 @@
-import * as db from "./db.js";
-import { validationResult } from "express-validator";
+// import * as db from "./db.js";
+// import { validationResult } from "express-validator";
+const db = require("./db");
+const expressValidator = require("express-validator");
 
 /**
  * @typedef {import("express").Request} Request
@@ -10,10 +12,8 @@ import { validationResult } from "express-validator";
  * @param {Request} req request object
  * @param {Response} res response object
  */
-export function addStudent(req, res) {
-  const errors = validationResult(req);
-  // TODO: send uuid to db method for insert query
-  // console.log(req.uuid);
+function addStudent(req, res) {
+  const errors = expressValidator.validationResult(req);
 
   if (!req.files) {
     return res.status(400).json({ message: "No files" });
@@ -31,9 +31,8 @@ export function addStudent(req, res) {
   }
 
   req.body.id = req.uuid;
-  console.log({ ...req.body, ...files });
 
-  const [_, err] = db.insertStudent({ ...req.body, ...files });
+  const err = db.insertStudent({ ...req.body, ...files });
 
   if (err != null) {
     res.send({ status: "failed", message: err });
@@ -46,6 +45,11 @@ export function addStudent(req, res) {
  * @param {Request} _ request object
  * @param {Response} res response object
  */
-export function getStudents(_, res) {
+function getStudents(_, res) {
   res.send({ todo: "display students" });
 }
+
+module.exports = {
+  addStudent,
+  getStudents,
+};

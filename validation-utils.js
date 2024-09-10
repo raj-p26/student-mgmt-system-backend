@@ -1,15 +1,14 @@
-// import { body } from "express-validator";
-import multer, { diskStorage } from "multer";
-import { v4 } from "uuid";
-import { mkdirSync } from "node:fs";
+const multer = require("multer");
+const { v4: uuidV4 } = require("uuid");
+const fs = require("fs");
 
-const storage = diskStorage({
+const storage = multer.diskStorage({
   destination: (req, file, callback) => {
     if (!req.uuid) {
-      req.uuid = v4();
+      req.uuid = uuidV4();
     }
     const uploadPath = `uploads/${req.uuid}`;
-    mkdirSync(uploadPath, { recursive: true });
+    fs.mkdirSync(uploadPath, { recursive: true });
 
     callback(null, uploadPath);
   },
@@ -20,7 +19,7 @@ const storage = diskStorage({
 
 const upload = multer({ storage });
 
-export const validateInsertStudent = [
+const validateInsertStudent = [
   // body("stream").notEmpty(),
   // body("semester").notEmpty(),
   // body("elective_course").notEmpty(),
@@ -51,3 +50,7 @@ export const validateInsertStudent = [
     { name: "fee_recipt_print" },
   ]),
 ];
+
+module.exports = {
+  validateInsertStudent,
+};

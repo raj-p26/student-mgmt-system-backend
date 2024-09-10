@@ -1,7 +1,7 @@
-import express from "express";
-import cors from "cors";
-import * as routes from "./routes.js";
-import { validateInsertStudent } from "./validation-utils.js";
+const express = require("express");
+const cors = require("cors");
+const routes = require("./routes");
+const validationUtil = require("./validation-utils");
 
 const app = express();
 app.use(cors());
@@ -14,6 +14,6 @@ app.get("/", function (_, res) {
 });
 
 app.get("/students/", routes.getStudents);
-app.post("/students/", validateInsertStudent, routes.addStudent);
+app.post("/students/", validationUtil.validateInsertStudent, routes.addStudent);
 
 app.listen(port, host, () => console.log(`App listening on ${host}:${port}`));

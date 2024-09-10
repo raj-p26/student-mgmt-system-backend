@@ -1,16 +1,30 @@
-import Database from "better-sqlite3";
-import { config } from "dotenv";
+const dotenv = require("dotenv");
+const mysql = require("mysql");
 
-config();
+dotenv.config();
 
-const DB_URL = process.env.DB_URL;
+const DB_NAME = process.env.DB_NAME;
 
-if (DB_URL == undefined) {
+if (DB_NAME == undefined) {
   console.log("Ain't no way DB_URL is not set in .env");
   process.exit(1);
 }
 
-const db = new Database(DB_URL);
+/** @returns {[mysql.Connection | null, string | null]} */
+function initDb() {
+  try {
+    const conn = mysql.createConnection({
+      host: "localhost",
+      username: "root",
+      password: "",
+      database: DB_NAME,
+    });
+
+    return [conn, null];
+  } catch (e) {
+    return [null, e.toString()];
+  }
+}
 
 const insertQuery = `
   INSERT INTO student_records(
@@ -32,50 +46,60 @@ const insertQuery = `
   );
 `;
 
-/** @returns {[[ number, string ], string | null]} */
-export function insertStudent(student) {
-  try {
-    const res = db
-      .prepare(insertQuery)
-      .run(
-        student.id,
-        student.enrollment_no,
-        student.abc_id,
-        student.gr_no,
-        student.aadhar_number,
-        student.stream,
-        student.semester,
-        student.main_course,
-        student.first_secondary_subject,
-        student.tertiary_secondary_subject,
-        student.bonafide_doc,
-        student.tc_doc,
-        student.no_objection_doc,
-        student.first_trial_doc,
-        student.gender,
-        student.email,
-        student.contact_no,
-        student.wh_no,
-        student.fee_recipt_print,
-        student.full_name,
-        student.address,
-        student.city,
-        student.district,
-        student.pincode,
-        student.birth_date,
-        student.birth_place,
-        student.caste,
-        student.full_name_of_parent,
-        student.parent_no,
-        student.last_organization_studied_from,
-        student.last_studied_year,
-        student.elective_course,
-        student.studentimg
-      );
-
-    return [[res.changes, res.lastInsertRowid], null];
-  } catch (e) {
-    console.log("Err:", e);
-    return [[0, null], e];
+/** @returns {string | null} */
+function insertStudent(student) {
+  const [conn, err] = initDb();
+  if (err != null) {
+    return err;
   }
+
+  conn.query(
+    insertQuery,
+    [
+      student.id,
+      student.enrollment_no,
+      student.abc_id,
+      student.gr_no,
+      student.aadhar_number,
+      student.stream,
+      student.semester,
+      student.main_course,
+      student.first_secondary_subject,
+      student.tertiary_secondary_subject,
+      student.bonafide_doc,
+      student.tc_doc,
+      student.no_objection_doc,
+      student.first_trial_doc,
+      student.gender,
+      student.email,
+      student.contact_no,
+      student.wh_no,
+      student.fee_recipt_print,
+      student.full_name,
+      student.address,
+      student.city,
+      student.district,
+      student.pincode,
+      student.birth_date,
+      student.birth_place,
+      student.caste,
+      student.full_name_of_parent,
+      student.parent_no,
+      student.last_organization_studied_from,
+      student.last_studied_year,
+      student.elective_course,
+      student.studentimg,
+    ],
+    (err, _results, _fields) => {
+      if (err != null) {
+        return err.message;
+      }
+
+      return null;
+    }
+  );
 }
+
+module.exports = {
+  insertStudent,
+};
