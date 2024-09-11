@@ -46,6 +46,8 @@ const insertQuery = `
   );
 `;
 
+const allStudentsQuery = `SELECT * FROM student_records;`;
+
 /** @returns {string | null} */
 function insertStudent(student) {
   const [conn, err] = initDb();
@@ -100,6 +102,24 @@ function insertStudent(student) {
   );
 }
 
+function allStudents() {
+  const [conn, err] = initDb();
+  if (err != null) {
+    return err;
+  }
+
+  conn.query(allStudentsQuery, function (err, results, fields) {
+    console.table(fields);
+
+    if (err != null) {
+      return err.sqlMessage;
+    }
+
+    return results;
+  });
+}
+
 module.exports = {
   insertStudent,
+  allStudents,
 };

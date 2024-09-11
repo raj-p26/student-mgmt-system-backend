@@ -41,14 +41,9 @@ const validateInsertStudent = [
   // body("city").notEmpty(),
   // body("district").notEmpty(),
   // body("pincode").notEmpty(),
-  upload.fields([
-    { name: "studentimg" },
-    { name: "tc_doc" },
-    { name: "no_objection_doc" },
-    { name: "first_trial_doc" },
-    { name: "bonafide_doc" },
-    { name: "fee_recipt_print" },
-  ]),
+
+  // TODO: handle other file fields in future
+  upload.fields([{ name: "studentimg" }]),
 ];
 
 module.exports = {

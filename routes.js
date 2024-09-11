@@ -1,7 +1,4 @@
-// import * as db from "./db.js";
-// import { validationResult } from "express-validator";
 const db = require("./db");
-const expressValidator = require("express-validator");
 
 /**
  * @typedef {import("express").Request} Request
@@ -13,14 +10,8 @@ const expressValidator = require("express-validator");
  * @param {Response} res response object
  */
 function addStudent(req, res) {
-  const errors = expressValidator.validationResult(req);
-
   if (!req.files) {
     return res.status(400).json({ message: "No files" });
-  }
-
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
   }
 
   const files = {};
@@ -42,10 +33,17 @@ function addStudent(req, res) {
 }
 
 /**
+ * Returns all records.
+ *
  * @param {Request} _ request object
  * @param {Response} res response object
  */
 function getStudents(_, res) {
+  const err = db.allStudents();
+
+  if (err != null) {
+    console.log(err);
+  }
   res.send({ todo: "display students" });
 }
 
