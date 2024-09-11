@@ -26,10 +26,10 @@ function addStudent(req, res) {
   const err = db.insertStudent({ ...req.body, ...files });
 
   if (err != null) {
-    res.send({ status: "failed", message: err });
+    res.status(500).send({ status: "failed", message: err });
   }
 
-  res.send({ todo: "Add students", uuid: req.uuid });
+  res.send({ uuid: req.uuid });
 }
 
 /**
@@ -38,13 +38,12 @@ function addStudent(req, res) {
  * @param {Request} _ request object
  * @param {Response} res response object
  */
-function getStudents(_, res) {
-  const err = db.allStudents();
+async function getStudents(_, res) {
+  const records = await db
+    .allStudents()
+    .catch((e) => res.status(500).send({ error: e }));
 
-  if (err != null) {
-    console.log(err);
-  }
-  res.send({ todo: "display students" });
+  res.send({ students: records });
 }
 
 module.exports = {

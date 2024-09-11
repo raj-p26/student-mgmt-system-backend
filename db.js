@@ -15,7 +15,7 @@ function initDb() {
   try {
     const conn = mysql.createConnection({
       host: "localhost",
-      username: "root",
+      user: "root",
       password: "",
       database: DB_NAME,
     });
@@ -30,25 +30,24 @@ const insertQuery = `
   INSERT INTO student_records(
     id, enrollment_no, abc_id, gr_no, aadhar_number,
     stream, semester, main_course, first_secondary_subject,
-    tertiary_secondary_subject, bonafide_doc,
-    tc_doc, no_objection_doc, first_trial_doc,
-    student_gender, email, contact_no,
-    whatsapp_no, fee_recipt_print, full_name, address,
+    tertiary_secondary_subject, student_gender, email,
+    contact_no, whatsapp_no, surname, name, fathername,
+    father_name, mother_name, address,
     city, district, pincode, birth_date, birth_place, caste,
-    full_name_of_parent, parent_contact_no,
+    parent_contact_no,
     last_organization_studied_from, last_studied_year,
     elective_course, student_image
   ) VALUES (
     ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
     ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
     ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-    ?, ?, ?
+    ?
   );
 `;
 
 const allStudentsQuery = `SELECT * FROM student_records;`;
 
-/** @returns {string | null} */
+/** @returns {string | null} returns any errors occured from db */
 function insertStudent(student) {
   const [conn, err] = initDb();
   if (err != null) {
@@ -68,16 +67,15 @@ function insertStudent(student) {
       student.main_course,
       student.first_secondary_subject,
       student.tertiary_secondary_subject,
-      student.bonafide_doc,
-      student.tc_doc,
-      student.no_objection_doc,
-      student.first_trial_doc,
       student.gender,
       student.email,
       student.contact_no,
       student.wh_no,
-      student.fee_recipt_print,
-      student.full_name,
+      student.surname,
+      student.name,
+      student.fathername,
+      student.father_name,
+      student.mother_name,
       student.address,
       student.city,
       student.district,
@@ -85,7 +83,6 @@ function insertStudent(student) {
       student.birth_date,
       student.birth_place,
       student.caste,
-      student.full_name_of_parent,
       student.parent_no,
       student.last_organization_studied_from,
       student.last_studied_year,
@@ -94,28 +91,31 @@ function insertStudent(student) {
     ],
     (err, _results, _fields) => {
       if (err != null) {
-        return err.message;
+        console.log(err.sqlMessage);
+        return err.sqlMessage;
       }
 
       return null;
     }
   );
+
+  conn.end();
 }
 
 function allStudents() {
   const [conn, err] = initDb();
   if (err != null) {
-    return err;
+    return new Promise((_, reject) => reject(err));
   }
 
-  conn.query(allStudentsQuery, function (err, results, fields) {
-    console.table(fields);
-
-    if (err != null) {
-      return err.sqlMessage;
-    }
-
-    return results;
+  return new Promise((resolve, reject) => {
+    conn.query(allStudentsQuery, function (err, results) {
+      if (err != null) {
+        reject(err.sqlMessage);
+      } else {
+        resolve(results);
+      }
+    });
   });
 }
 
