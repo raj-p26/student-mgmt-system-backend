@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS student_records (
     abc_id                         VARCHAR(12),                                    -- ABC ID of the student
     gr_no                          VARCHAR(30),                                    -- GR number of the student
     aadhar_number                  VARCHAR(20)  NOT NULL,                          -- aadhar number of the student
-    stream                         VARCHAR(50)  NOT NULL,                          -- stream in which student wants to take admission
+    stream                         VARCHAR(150)  NOT NULL,                          -- stream in which student wants to take admission
     semester                       INT(3),                                         -- semester
     main_course                    VARCHAR(20),                                    -- main course selected by student
     first_secondary_subject        VARCHAR(20),                                    -- first optional course selected by student
@@ -15,7 +15,6 @@ CREATE TABLE IF NOT EXISTS student_records (
     first_trial_doc                TEXT,                                           -- path of the document
     student_gender                 VARCHAR(10)  NOT NULL,                          -- gender of the student
     email                          VARCHAR(255) NOT NULL,                          -- email of the student
-    contact_no                     VARCHAR(15)  NOT NULL,                          -- contact number of the student
     whatsapp_no                    VARCHAR(15)  NOT NULL,                          -- you know that already
     fee_recipt_print               TEXT,                                           -- path of the document
     surname                        VARCHAR(50),
@@ -37,3 +36,12 @@ CREATE TABLE IF NOT EXISTS student_records (
     student_image                  VARCHAR(255) NOT NULL,                          -- Image of the student
     inserted_at                    TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP -- Timestamp when record was added
 );
+
+CREATE TABLE IF NOT EXISTS administration (
+    id          INT(3)       PRIMARY KEY AUTO_INCREMENT,
+    username    VARCHAR(255) NOT NULL,
+    password_   VARCHAR(255) NOT NULL,
+    inserted_at TIMESTAMP    DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO administration (username, password_) VALUE ('admin', 'admin');

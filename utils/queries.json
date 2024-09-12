@@ -1,0 +1,6 @@
+{
+  "insertStudent": " INSERT INTO student_records(id, enrollment_no, abc_id, gr_no, aadhar_number, stream, semester, main_course, first_secondary_subject, tertiary_secondary_subject, student_gender, email, whatsapp_no, surname, name, fathername, father_name, mother_name, address, city, district, pincode, birth_date, birth_place, caste, parent_contact_no, last_organization_studied_from, last_studied_year, elective_course, student_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+  "selectAll": "SELECT id, enrollment_no, abc_id, gr_no, aadhar_number, stream, semester, main_course, first_secondary_subject, tertiary_secondary_subject, student_gender, email, whatsapp_no, surname, name, fathername, father_name, mother_name, address, city, district, pincode, birth_date, birth_place, caste, parent_contact_no, last_organization_studied_from, last_studied_year, elective_course FROM student_records",
+  "selectByID": "SELECT * FROM student_records WHERE id=?",
+  "selectIDs": "SELECT id from student_records"
+}

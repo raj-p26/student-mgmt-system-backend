@@ -1,11 +1,14 @@
 const express = require("express");
 const cors = require("cors");
 const routes = require("./routes");
-const validationUtil = require("./validation-utils");
+const validationUtil = require("./utils/validation-utils");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 const app = express();
 app.use(cors());
-app.use("/files", express.static("/uploads"));
+app.use("/files", express.static("uploads"));
 
 const host = process.env.HOST || "localhost";
 /** @type {number} */
@@ -17,5 +20,7 @@ app.get("/", function (_, res) {
 
 app.get("/students/", routes.getStudents);
 app.post("/students/", validationUtil.validateInsertStudent, routes.addStudent);
+
+app.get("/students/:id", routes.studentByID);
 
 app.listen(port, host, () => console.log(`App listening on ${host}:${port}`));

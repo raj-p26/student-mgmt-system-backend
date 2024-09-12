@@ -10,17 +10,9 @@ This is the repository containing the backend of Student Management System.
 node -v
 ```
 
-- Install sqlite in your machine from [here](https://sqlite.org/download.html)
-
 - After that, either fork or clone this repo.
 
-- Dump the schema.sql file into your sqlite db:
-
-```sh
-sqlite3 mydb.db < schema.sql
-```
-
-This will create necessary table(s) in the database.
+- Dump the schema.sql file into your mysql db:
 
 ## Up and Running
 

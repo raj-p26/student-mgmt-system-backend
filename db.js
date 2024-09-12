@@ -1,7 +1,5 @@
-const dotenv = require("dotenv");
 const mysql = require("mysql");
-
-dotenv.config();
+const queries = require("./utils/queries.json");
 
 const DB_NAME = process.env.DB_NAME;
 
@@ -10,52 +8,17 @@ if (DB_NAME == undefined) {
   process.exit(1);
 }
 
-/** @returns {[mysql.Connection | null, string | null]} */
-function initDb() {
-  try {
-    const conn = mysql.createConnection({
-      host: "localhost",
-      user: "root",
-      password: "",
-      database: DB_NAME,
-    });
+const conn = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: DB_NAME,
+});
 
-    return [conn, null];
-  } catch (e) {
-    return [null, e.toString()];
-  }
-}
-
-const insertQuery = `
-  INSERT INTO student_records(
-    id, enrollment_no, abc_id, gr_no, aadhar_number,
-    stream, semester, main_course, first_secondary_subject,
-    tertiary_secondary_subject, student_gender, email,
-    contact_no, whatsapp_no, surname, name, fathername,
-    father_name, mother_name, address,
-    city, district, pincode, birth_date, birth_place, caste,
-    parent_contact_no,
-    last_organization_studied_from, last_studied_year,
-    elective_course, student_image
-  ) VALUES (
-    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-    ?
-  );
-`;
-
-const allStudentsQuery = `SELECT * FROM student_records;`;
-
-/** @returns {string | null} returns any errors occured from db */
+/** @returns {string | null} any errors occured from db */
 function insertStudent(student) {
-  const [conn, err] = initDb();
-  if (err != null) {
-    return err;
-  }
-
   conn.query(
-    insertQuery,
+    queries.insertStudent,
     [
       student.id,
       student.enrollment_no,
@@ -69,7 +32,6 @@ function insertStudent(student) {
       student.tertiary_secondary_subject,
       student.gender,
       student.email,
-      student.contact_no,
       student.wh_no,
       student.surname,
       student.name,
@@ -103,13 +65,38 @@ function insertStudent(student) {
 }
 
 function allStudents() {
-  const [conn, err] = initDb();
-  if (err != null) {
-    return new Promise((_, reject) => reject(err));
-  }
-
   return new Promise((resolve, reject) => {
-    conn.query(allStudentsQuery, function (err, results) {
+    conn.query(queries.selectAll, function (err, results) {
+      if (err != null) {
+        reject(err.sqlMessage);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+}
+
+/**
+ * Returns either student or error.
+ * @param {string} id ID of the student
+ */
+function getStudentByID(id) {
+  return new Promise((resolve, reject) => {
+    conn.query(queries.selectByID, [id], function (err, results, _fields) {
+      if (err != null) {
+        reject(err);
+      } else if (results[0] == undefined) {
+        reject("Not Found");
+      } else {
+        resolve(results[0]);
+      }
+    });
+  });
+}
+
+function getStudentIDs() {
+  return new Promise((resolve, reject) => {
+    conn.query(queries.selectIDs, function (err, results) {
       if (err != null) {
         reject(err.sqlMessage);
       } else {
@@ -122,4 +109,6 @@ function allStudents() {
 module.exports = {
   insertStudent,
   allStudents,
+  getStudentByID,
+  getStudentIDs,
 };

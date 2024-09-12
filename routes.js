@@ -26,10 +26,10 @@ function addStudent(req, res) {
   const err = db.insertStudent({ ...req.body, ...files });
 
   if (err != null) {
-    res.status(500).send({ status: "failed", message: err });
+    return res.status(500).send({ status: "failed", message: err });
   }
 
-  res.send({ uuid: req.uuid });
+  res.send({ uuid: req.uuid, status: "success" });
 }
 
 /**
@@ -39,14 +39,47 @@ function addStudent(req, res) {
  * @param {Response} res response object
  */
 async function getStudents(_, res) {
-  const records = await db
-    .allStudents()
-    .catch((e) => res.status(500).send({ error: e }));
+  db.allStudents()
+    .then((records) => res.send({ status: "success", students: records }))
+    .catch((e) => {
+      console.log(e);
+      res.status(500).send({ error: e, status: "failed" });
+    });
+}
 
-  res.send({ students: records });
+/**
+ * Returns record based on ID.
+ *
+ * @param {Request} _ request object
+ * @param {Response} res response object
+ */
+async function getStudentIDs(_, res) {
+  db.getStudentIDs()
+    .then((ids) => res.send({ ids, status: "success" }))
+    .catch((err) => res.status(500).send({ status: "failed", err }));
+}
+
+/**
+ * Returns record based on ID.
+ *
+ * @param {Request} req request object
+ * @param {Response} res response object
+ */
+async function studentByID(req, res) {
+  const id = req.params.id;
+
+  db.getStudentByID(id)
+    .then((student) => {
+      res.send({ student, status: "success" });
+    })
+    .catch((e) => {
+      res.status(500).send({ error: e, status: "failed" });
+    });
 }
 
 module.exports = {
   addStudent,
   getStudents,
+  studentByID,
+  getStudentIDs,
 };
