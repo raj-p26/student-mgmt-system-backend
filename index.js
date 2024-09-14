@@ -3,6 +3,7 @@ const cors = require("cors");
 const routes = require("./routes");
 const validationUtil = require("./utils/validation-utils");
 const dotenv = require("dotenv");
+const db = require("./db");
 
 dotenv.config();
 
@@ -22,5 +23,10 @@ app.get("/students/", routes.getStudents);
 app.post("/students/", validationUtil.validateInsertStudent, routes.addStudent);
 
 app.get("/students/:id", routes.studentByID);
+app.get("/last-gr", (_, res) => {
+  db.getLastGRFromDB()
+    .then((val) => res.send({ gr_no: val }))
+    .catch((err) => res.status(500).send({ err }));
+});
 
 app.listen(port, host, () => console.log(`App listening on ${host}:${port}`));

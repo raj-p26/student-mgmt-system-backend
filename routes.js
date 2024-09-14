@@ -77,9 +77,21 @@ async function studentByID(req, res) {
     });
 }
 
+/**
+ * @param {Request} req request object
+ * @param {Response} res response object
+ */
+function getLastGR(req, res) {
+  console.log("here");
+  db.getLastGRFromDB()
+    .then((gr) => res.send({ gr }))
+    .catch((err) => res.status(500).send({ status: "catched", err }));
+}
+
 module.exports = {
   addStudent,
   getStudents,
   studentByID,
   getStudentIDs,
+  getLastGR,
 };

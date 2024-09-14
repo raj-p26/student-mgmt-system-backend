@@ -1,5 +1,8 @@
 const mysql = require("mysql");
 const queries = require("./utils/queries.json");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 const DB_NAME = process.env.DB_NAME;
 
@@ -52,7 +55,7 @@ function insertStudent(student) {
       student.studentimg,
     ],
     (err, _results, _fields) => {
-      if (err != null) {
+      if (err != null || err != undefined) {
         console.log(err.sqlMessage);
         return err.sqlMessage;
       }
@@ -60,8 +63,6 @@ function insertStudent(student) {
       return null;
     }
   );
-
-  conn.end();
 }
 
 function allStudents() {
@@ -106,9 +107,22 @@ function getStudentIDs() {
   });
 }
 
+function getLastGRFromDB() {
+  return new Promise((resolve, reject) => {
+    conn.query(queries.lastGRQuery, function (err, results) {
+      if (err != null) {
+        reject(err.sqlMessage);
+      } else {
+        resolve(results[0].gr_no);
+      }
+    });
+  });
+}
+
 module.exports = {
   insertStudent,
   allStudents,
   getStudentByID,
   getStudentIDs,
+  getLastGRFromDB,
 };
