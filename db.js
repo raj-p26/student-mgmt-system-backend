@@ -113,7 +113,11 @@ function getLastGRFromDB() {
       if (err != null) {
         reject(err.sqlMessage);
       } else {
-        resolve(results[0].gr_no);
+        if (results.length === 0) {
+          resolve("");
+        } else {
+          resolve(results[0].gr_no || "");
+        }
       }
     });
   });

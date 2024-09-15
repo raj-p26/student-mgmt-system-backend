@@ -23,4 +23,5 @@ const validateInsertStudent = [upload.fields([{ name: "studentimg" }])];
 
 module.exports = {
   validateInsertStudent,
+  upload,
 };
