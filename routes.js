@@ -39,7 +39,8 @@ function addStudent(req, res) {
  * @param {Response} res response object
  */
 async function getStudents(_, res) {
-  db.allStudents()
+  return db
+    .allStudents()
     .then((records) => res.send({ status: "success", students: records }))
     .catch((e) => {
       console.log(e);
@@ -48,7 +49,8 @@ async function getStudents(_, res) {
 }
 
 /**
- * Returns record based on ID.
+ * @deprecated
+ * No need of this function.
  *
  * @param {Request} _ request object
  * @param {Response} res response object
@@ -73,19 +75,23 @@ async function studentByID(req, res) {
       res.send({ student, status: "success" });
     })
     .catch((e) => {
-      res.status(500).send({ error: e, status: "failed" });
+      if (e === "Not Found") {
+        res.status(404).send({ error: "Not Found", status: "failed" });
+      } else {
+        res.status(500).send({ error: e, status: "failed" });
+      }
     });
 }
 
 /**
- * @param {Request} req request object
+ * @param {Request} _ request object
  * @param {Response} res response object
  */
-function getLastGR(req, res) {
+function getLastGR(_, res) {
   console.log("here");
   db.getLastGRFromDB()
-    .then((gr) => res.send({ gr }))
-    .catch((err) => res.status(500).send({ status: "catched", err }));
+    .then((gr) => res.send({ gr, status: "success" }))
+    .catch((err) => res.status(500).send({ status: "failed", err }));
 }
 
 module.exports = {

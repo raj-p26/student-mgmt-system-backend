@@ -1,10 +1,8 @@
 const mysql = require("mysql");
 const queries = require("./utils/queries.json");
-const dotenv = require("dotenv");
+const config = require("./utils/config");
 
-dotenv.config();
-
-const DB_NAME = process.env.DB_NAME;
+const DB_NAME = config.DB_NAME;
 
 if (DB_NAME == undefined) {
   console.log("Ain't no way DB_URL is not set in .env");
