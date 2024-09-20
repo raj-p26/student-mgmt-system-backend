@@ -16,9 +16,16 @@ app.get("/students/", routes.getStudents);
 app.post("/students/", validationUtil.validateInsertStudent, routes.addStudent);
 
 app.get("/students/:id", routes.studentByID);
+
 app.get("/last-gr", (_, res) => {
   db.getLastGRFromDB()
     .then((val) => res.send({ status: "success", gr_no: val }))
+    .catch((err) => res.status(500).send({ status: "failed", err }));
+});
+
+app.get("/last-tc-serial", (_, res) => {
+  db.getLastTCSerial()
+    .then((value) => res.send({ status: "success", tc_serial: value }))
     .catch((err) => res.status(500).send({ status: "failed", err }));
 });
 

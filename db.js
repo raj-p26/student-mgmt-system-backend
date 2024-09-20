@@ -107,7 +107,7 @@ function getStudentIDs() {
 
 function getLastGRFromDB() {
   return new Promise((resolve, reject) => {
-    conn.query(queries.lastGRQuery, function (err, results) {
+    conn.query(queries.lastGR, function (err, results) {
       if (err != null) {
         reject(err.sqlMessage);
       } else {
@@ -121,10 +121,27 @@ function getLastGRFromDB() {
   });
 }
 
+function getLastTCSerial() {
+  return new Promise((resolve, reject) => {
+    conn.query(queries.lastTCSerial, (err, results) => {
+      if (err != null) {
+        reject(err.sqlMessage);
+      } else {
+        if (results.length === 0) {
+          resolve("");
+        } else {
+          resolve(results[0].serial_number || "");
+        }
+      }
+    });
+  });
+}
+
 module.exports = {
   insertStudent,
   allStudents,
   getStudentByID,
   getStudentIDs,
   getLastGRFromDB,
+  getLastTCSerial,
 };

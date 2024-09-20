@@ -1,3 +1,7 @@
+DROP TABLE IF EXISTS student_records;
+DROP TABLE IF EXISTS administration;
+DROP TABLE IF EXISTS tc_docs;
+
 CREATE TABLE IF NOT EXISTS student_records (
     id                             VARCHAR(40)  NOT NULL PRIMARY KEY,  -- UUID of the Record
     enrollment_no                  VARCHAR(30),                        -- enrollment number of the student
@@ -45,3 +49,10 @@ CREATE TABLE IF NOT EXISTS administration (
 );
 
 INSERT INTO administration (username, password_) VALUE ('admin', 'admin');
+
+CREATE TABLE IF NOT EXISTS tc_docs (
+    serial_number INT(3) PRIMARY KEY AUTO_INCREMENT,
+    student_id VARCHAR(40) NOT NULL,
+    FOREIGN KEY(student_id) REFERENCES student_records(id)
+    -- TODO: on update cascade, on delete cascade.
+);
