@@ -54,5 +54,14 @@ describe("Test All `GET` Routes", () => {
     expect(res.body.status).toBe("failed");
   });
 
+  test("GET /last-tc-serial", async () => {
+    const res = await request(app)
+      .get("/last-tc-serial")
+      .expect(200)
+      .expect("Content-Type", /json/);
+
+    expect(res.body).not.toBe(null);
+  });
+
   // TODO: handle correct Student ID test case
 });

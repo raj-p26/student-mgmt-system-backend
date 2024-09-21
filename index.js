@@ -1,7 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const routes = require("./routes");
-const validationUtil = require("./utils/validation-utils");
+const { validateInsertStudent, upload } = require("./utils/validation-utils");
+const fileRoutes = require("./files.routes");
 const db = require("./db");
 
 const app = express();
@@ -13,7 +14,7 @@ app.get("/", function (_, res) {
 });
 
 app.get("/students/", routes.getStudents);
-app.post("/students/", validationUtil.validateInsertStudent, routes.addStudent);
+app.post("/students/", validateInsertStudent, routes.addStudent);
 
 app.get("/students/:id", routes.studentByID);
 
@@ -28,5 +29,14 @@ app.get("/last-tc-serial", (_, res) => {
     .then((value) => res.send({ status: "success", tc_serial: value }))
     .catch((err) => res.status(500).send({ status: "failed", err }));
 });
+
+app.post("/upload-tc", upload.single("tc-doc"), fileRoutes.uploadDoc);
+app.post(
+  "/upload-first-trial",
+  upload.single("first-trial-doc"),
+  fileRoutes.uploadDoc
+);
+app.post("/upload-noc", upload.single("noc-doc"), fileRoutes.uploadDoc);
+app.post("/upload-bc", upload.single("bc-doc"), fileRoutes.uploadDoc);
 
 module.exports = app;
