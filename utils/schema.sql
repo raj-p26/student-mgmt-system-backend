@@ -53,6 +53,5 @@ INSERT INTO administration (username, password_) VALUE ('admin', 'admin');
 CREATE TABLE IF NOT EXISTS tc_docs (
     serial_number INT(3) PRIMARY KEY AUTO_INCREMENT,
     student_id VARCHAR(40) NOT NULL,
-    FOREIGN KEY(student_id) REFERENCES student_records(id)
-    -- TODO: on update cascade, on delete cascade.
+    FOREIGN KEY(student_id) REFERENCES student_records(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
