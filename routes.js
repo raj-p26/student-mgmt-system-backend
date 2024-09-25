@@ -21,7 +21,7 @@ function addStudent(req, res) {
     files[fieldName] = file.path;
   }
 
-  req.body.id = req.uuid;
+  req.body.id = req.headers.uuid;
 
   const err = db.insertStudent({ ...req.body, ...files });
 
@@ -29,7 +29,7 @@ function addStudent(req, res) {
     return res.status(500).send({ status: "failed", message: err });
   }
 
-  res.send({ uuid: req.uuid, status: "success" });
+  res.send({ uuid: req.headers.uuid, status: "success" });
 }
 
 /**

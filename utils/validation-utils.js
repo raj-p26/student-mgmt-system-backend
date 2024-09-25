@@ -12,8 +12,8 @@ const storage = multer.diskStorage({
 
     callback(null, uploadPath);
   },
-  filename: (_, file, callback) => {
-    callback(null, Math.round(Math.random() * 1e9) + "-" + file.originalname);
+  filename: (req, file, callback) => {
+    callback(null, file.originalname);
   },
 });
 
