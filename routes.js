@@ -94,10 +94,33 @@ function getLastGR(_, res) {
     .catch((err) => res.status(500).send({ status: "failed", err }));
 }
 
+/**
+ * @param {Request} _ request object
+ * @param {Response} res response object
+ */
+function getLastFTSerial(_, res) {
+  db.lastFTSerial()
+    .then((serial) => res.send({ status: "success", serial }))
+    .catch((err) => res.status(500).send({ status: "failed", err }));
+}
+
+/**
+ * @param {Request} req request object
+ * @param {Response} res response object
+ */
+function incFT(req, res) {
+  console.log(req.headers);
+  db.incrementSerial(req.headers.uuid, req.headers.docname)
+    .then((val) => res.send({ status: "success", message: val }))
+    .catch((err) => res.status(500).send({ status: "failed", message: err }));
+}
+
 module.exports = {
   addStudent,
   getStudents,
   studentByID,
   getStudentIDs,
   getLastGR,
+  getLastFTSerial,
+  incFT,
 };

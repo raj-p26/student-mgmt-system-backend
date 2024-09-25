@@ -56,3 +56,24 @@ CREATE TABLE IF NOT EXISTS first_trial_doc (
     student_id VARCHAR(40) NOT NULL,
     FOREIGN KEY(student_id) REFERENCES student_records(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE InnoDB;
+
+CREATE TABLE IF NOT EXISTS tc_doc (
+    serial_number INT(3) PRIMARY KEY AUTO_INCREMENT,
+    doc_name VARCHAR(50) NOT NULL,
+    student_id VARCHAR(40) NOT NULL,
+    FOREIGN KEY(student_id) REFERENCES student_records(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE InnoDB;
+
+CREATE TABLE IF NOT EXISTS bonafide_doc (
+    serial_number INT(3) PRIMARY KEY AUTO_INCREMENT,
+    doc_name VARCHAR(50) NOT NULL,
+    student_id VARCHAR(40) NOT NULL,
+    FOREIGN KEY(student_id) REFERENCES student_records(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE InnoDB;
+
+CREATE TABLE IF NOT EXISTS no_objection_doc (
+    serial_number INT(3) PRIMARY KEY AUTO_INCREMENT,
+    doc_name VARCHAR(50) NOT NULL,
+    student_id VARCHAR(40) NOT NULL,
+    FOREIGN KEY(student_id) REFERENCES student_records(id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE InnoDB;

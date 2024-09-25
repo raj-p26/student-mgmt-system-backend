@@ -4,5 +4,7 @@
   "selectByID": "SELECT * FROM student_records WHERE id=?",
   "selectIDs": "SELECT id from student_records",
   "lastGR": "SELECT gr_no FROM student_records ORDER BY inserted_at DESC LIMIT 1",
-  "lastTCSerial": "SELECT serial_number FROM tc_docs ORDER BY serial_number DESC LIMIT 1"
+  "lastTCSerial": "SELECT serial_number FROM tc_docs ORDER BY serial_number DESC LIMIT 1",
+  "lastFTSerial": "SELECT serial_number FROM first_trial_doc ORDER BY serial_number DESC LIMIT 1",
+  "incrementFTSerial": "INSERT INTO first_trial_doc (doc_name, student_id) VALUES (?, ?)"
 }

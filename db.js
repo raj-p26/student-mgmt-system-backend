@@ -137,6 +137,36 @@ function getLastTCSerial() {
   });
 }
 
+/** last first trial certificate serial number */
+function lastFTSerial() {
+  return new Promise((res, rej) => {
+    conn.query(queries.lastFTSerial, (err, results) => {
+      if (err != null) {
+        rej(err.sqlMessage);
+      } else {
+        if (results.length === 0) {
+          res("");
+        } else {
+          res(results[0].serial_number || "");
+        }
+      }
+    });
+  });
+}
+
+function incrementSerial(uuid, docName) {
+  console.log(uuid, docName);
+  return new Promise((res, rej) => {
+    conn.query(queries.incrementFTSerial, [docName, uuid], (err) => {
+      if (err != null) {
+        rej(err);
+      } else {
+        res("done");
+      }
+    });
+  });
+}
+
 module.exports = {
   insertStudent,
   allStudents,
@@ -144,4 +174,6 @@ module.exports = {
   getStudentIDs,
   getLastGRFromDB,
   getLastTCSerial,
+  lastFTSerial,
+  incrementSerial,
 };
