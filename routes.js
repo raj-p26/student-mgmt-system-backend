@@ -49,8 +49,9 @@ async function getStudents(_, res) {
 }
 
 /**
- * @deprecated
- * No need of this function.
+ * @deprecated No need of this function.
+ * TODO: Remove this function.
+ * Maybe I'm too lazy to remove it by this time.
  *
  * @param {Request} _ request object
  * @param {Response} res response object
@@ -75,11 +76,8 @@ async function studentByID(req, res) {
       res.send({ student, status: "success" });
     })
     .catch((e) => {
-      if (e === "Not Found") {
-        res.status(404).send({ error: "Not Found", status: "failed" });
-      } else {
-        res.status(500).send({ error: e, status: "failed" });
-      }
+      let statusCode = e === "Not Found" ? 400 : 500;
+      res.status(statusCode).send({ error: e, status: "failed" });
     });
 }
 
@@ -88,18 +86,17 @@ async function studentByID(req, res) {
  * @param {Response} res response object
  */
 function getLastGR(_, res) {
-  console.log("here");
   db.getLastGRFromDB()
     .then((gr) => res.send({ gr, status: "success" }))
     .catch((err) => res.status(500).send({ status: "failed", err }));
 }
 
 /**
- * @param {Request} _ request object
+ * @param {Request} req request object
  * @param {Response} res response object
  */
-function getLastFTSerial(_, res) {
-  db.lastFTSerial()
+function getLastSerial(req, res) {
+  db.lastSerial(req.params.doc_type)
     .then((serial) => res.send({ status: "success", serial }))
     .catch((err) => res.status(500).send({ status: "failed", err }));
 }
@@ -108,9 +105,12 @@ function getLastFTSerial(_, res) {
  * @param {Request} req request object
  * @param {Response} res response object
  */
-function incFT(req, res) {
-  console.log(req.headers);
-  db.incrementSerial(req.headers.uuid, req.headers.docname)
+function incSerial(req, res) {
+  db.incrementSerial(
+    req.headers.uuid,
+    req.headers.docname,
+    req.headers.doc_type
+  )
     .then((val) => res.send({ status: "success", message: val }))
     .catch((err) => res.status(500).send({ status: "failed", message: err }));
 }
@@ -121,6 +121,6 @@ module.exports = {
   studentByID,
   getStudentIDs,
   getLastGR,
-  getLastFTSerial,
-  incFT,
+  getLastSerial,
+  incSerial,
 };

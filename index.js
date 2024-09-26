@@ -29,8 +29,8 @@ app.get("/last-tc-serial", (_, res) => {
     .then((value) => res.send({ status: "success", tc_serial: value }))
     .catch((err) => res.status(500).send({ status: "failed", err }));
 });
-app.get("/last-ft-serial", routes.getLastFTSerial);
-app.post("/add-first-trial", routes.incFT);
+app.get("/last-serial/:doc_type", routes.getLastSerial);
+app.post("/last-serial/", routes.incSerial);
 
 app.post("/upload-tc", upload.single("tc-doc"), fileRoutes.uploadDoc);
 app.post(

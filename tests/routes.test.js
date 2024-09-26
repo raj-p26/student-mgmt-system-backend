@@ -14,7 +14,7 @@ describe("Test All `GET` Routes", () => {
   test("GET /", async () => {
     const res = await request(app)
       .get("/")
-      .expect("Content-Type", "application/json; charset=utf-8")
+      .expect("Content-Type", /json/)
       .expect(200);
 
     expect(res.body).toHaveProperty("checkHealth");
@@ -24,7 +24,7 @@ describe("Test All `GET` Routes", () => {
   test("GET /students/", async () => {
     const res = await request(app)
       .get("/students/")
-      .expect("Content-Type", "application/json; charset=utf-8")
+      .expect("Content-Type", /json/)
       .expect(200);
 
     expect(res.body).not.toBe(null);
@@ -35,7 +35,7 @@ describe("Test All `GET` Routes", () => {
   test("GET /last-gr", async () => {
     const res = await request(app)
       .get("/last-gr")
-      .expect("Content-Type", "application/json; charset=utf-8")
+      .expect("Content-Type", /json/)
       .expect(200);
 
     expect(res.body).not.toBe(null);
@@ -48,19 +48,25 @@ describe("Test All `GET` Routes", () => {
     const res = await request(app)
       .get("/students/invalid-id")
       .expect(404)
-      .expect("Content-Type", "application/json; charset=utf-8");
+      .expect("Content-Type", /json/);
 
     expect(res.body).not.toBe(null);
     expect(res.body.status).toBe("failed");
   });
 
-  test("GET /last-tc-serial", async () => {
+  test("GET /last-serial/tc", async () => {
     const res = await request(app)
-      .get("/last-tc-serial")
+      .get("/last-serial/tc")
       .expect(200)
       .expect("Content-Type", /json/);
 
     expect(res.body).not.toBe(null);
+    expect(res.body).toHaveProperty("status");
+    expect(res.body.status).toBe("success");
+  });
+
+  test("GET /last-serial/invalid", async () => {
+    const res = await request(app).get("/l");
   });
 
   // TODO: handle correct Student ID test case

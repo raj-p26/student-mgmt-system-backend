@@ -111,58 +111,44 @@ function getLastGRFromDB() {
       if (err != null) {
         reject(err.sqlMessage);
       } else {
-        if (results.length === 0) {
-          resolve("");
-        } else {
-          resolve(results[0].gr_no || "");
-        }
+        results.length === 0 ? resolve("") : resolve(results[0].gr_no || "");
       }
     });
   });
 }
 
-function getLastTCSerial() {
-  return new Promise((resolve, reject) => {
-    conn.query(queries.lastTCSerial, (err, results) => {
-      if (err != null) {
-        reject(err.sqlMessage);
-      } else {
-        if (results.length === 0) {
-          resolve("");
-        } else {
-          resolve(results[0].serial_number || "");
-        }
-      }
-    });
-  });
-}
-
-/** last first trial certificate serial number */
-function lastFTSerial() {
+/**
+ * returns promise containing last serial number of any given document.
+ * @param {string} docType document type
+ */
+function lastSerial(docType) {
   return new Promise((res, rej) => {
-    conn.query(queries.lastFTSerial, (err, results) => {
+    const query = queries[`last_${docType}_Serial`];
+    if (query === undefined) rej("invalid document type");
+
+    conn.query(query, (err, results) => {
       if (err != null) {
         rej(err.sqlMessage);
       } else {
-        if (results.length === 0) {
-          res("");
-        } else {
-          res(results[0].serial_number || "");
-        }
+        results.length === 0 ? res("") : res(results[0].serial_number || "");
       }
     });
   });
 }
 
-function incrementSerial(uuid, docName) {
-  console.log(uuid, docName);
+/**
+ * @param {string} uuid uuid of the student
+ * @param {string} docName name of the document
+ * @param {string} docType type of the document
+ * @returns idk, man. Figure out on your own.
+ */
+function incrementSerial(uuid, docName, docType) {
   return new Promise((res, rej) => {
-    conn.query(queries.incrementFTSerial, [docName, uuid], (err) => {
-      if (err != null) {
-        rej(err);
-      } else {
-        res("done");
-      }
+    const query = queries[`increment_${docType}_Serial`];
+    if (query === undefined) rej("Invalid document Type");
+
+    conn.query(query, [docName, uuid], (err) => {
+      err != null ? rej(err) : res("done");
     });
   });
 }
@@ -174,6 +160,6 @@ module.exports = {
   getStudentIDs,
   getLastGRFromDB,
   getLastTCSerial,
-  lastFTSerial,
+  lastSerial,
   incrementSerial,
 };
