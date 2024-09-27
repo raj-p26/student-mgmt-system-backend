@@ -153,6 +153,22 @@ function incrementSerial(uuid, docName, docType) {
   });
 }
 
+/**
+ * @param {string} uuid student's UUID
+ * @param {string} docType type of the document
+ */
+function hasDocument(uuid, docType) {
+  return new Promise((res, rej) => {
+    const query = queries[`has_${docType}`];
+    if (query === undefined) rej("Not valid document");
+
+    conn.query(query, [uuid], (err, results) => {
+      if (err !== null) rej(err);
+      else res(results[0].exists_ > 0);
+    });
+  });
+}
+
 module.exports = {
   insertStudent,
   allStudents,
@@ -161,4 +177,5 @@ module.exports = {
   getLastGRFromDB,
   lastSerial,
   incrementSerial,
+  hasDocument,
 };

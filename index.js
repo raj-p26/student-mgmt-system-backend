@@ -18,17 +18,14 @@ app.post("/students/", validateInsertStudent, routes.addStudent);
 
 app.get("/students/:id", routes.studentByID);
 
+app.get("/students/:id/has/:doc_type", routes.hasDocument);
+
 app.get("/last-gr", (_, res) => {
   db.getLastGRFromDB()
     .then((val) => res.send({ status: "success", gr_no: val }))
     .catch((err) => res.status(500).send({ status: "failed", err }));
 });
 
-// app.get("/last-tc-serial", (_, res) => {
-//   db.lastSerial()
-//     .then((value) => res.send({ status: "success", tc_serial: value }))
-//     .catch((err) => res.status(500).send({ status: "failed", err }));
-// });
 app.get("/last-serial/:doc_type", routes.getLastSerial);
 app.post("/last-serial/", routes.incSerial);
 
@@ -38,6 +35,7 @@ app.post(
   upload.single("first-trial-doc"),
   fileRoutes.uploadDoc
 );
+
 app.post("/upload-noc", upload.single("noc-doc"), fileRoutes.uploadDoc);
 app.post("/upload-bc", upload.single("bc-doc"), fileRoutes.uploadDoc);
 

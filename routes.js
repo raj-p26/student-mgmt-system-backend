@@ -115,6 +115,16 @@ function incSerial(req, res) {
     .catch((err) => res.status(500).send({ status: "failed", message: err }));
 }
 
+/**
+ * @param {Request} req request object
+ * @param {Response} res response object
+ */
+function hasDocument(req, res) {
+  db.hasDocument(req.params.id, req.params.doc_type)
+    .then((exists) => res.send({ status: "ok", exists }))
+    .catch((err) => res.status(500).send({ status: "failed", err }));
+}
+
 module.exports = {
   addStudent,
   getStudents,
@@ -123,4 +133,5 @@ module.exports = {
   getLastGR,
   getLastSerial,
   incSerial,
+  hasDocument,
 };

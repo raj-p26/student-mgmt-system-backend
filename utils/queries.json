@@ -12,5 +12,9 @@
   "increment_first-trial_Serial": "INSERT INTO first_trial_doc (doc_name, student_id) VALUES (?, ?)",
   "increment_tc_Serial": "INSERT INTO tc_doc (doc_name, student_id) VALUES (?, ?)",
   "increment_no-objection_Serial": "INSERT INTO no_objection_doc (doc_name, student_id) VALUES (?, ?)",
-  "increment_bonafide_Serial": "INSERT INTO bonafide_doc (doc_name, student_id) VALUES (?, ?)"
+  "increment_bonafide_Serial": "INSERT INTO bonafide_doc (doc_name, student_id) VALUES (?, ?)",
+  "has_tc": "SELECT COUNT(*) AS exists_ FROM tc_doc WHERE student_id = ?",
+  "has_bonafide": "SELECT COUNT(*) AS exists_ FROM bonafide_doc WHERE student_id = ?",
+  "has_no-objection": "SELECT COUNT(*) AS exists_ FROM no_objection_doc WHERE student_id = ?",
+  "has_first-trial": "SELECT COUNT(*) AS exists_ FROM first_trial_doc WHERE student_id = ?"
 }
