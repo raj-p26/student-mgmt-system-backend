@@ -24,11 +24,11 @@ app.get("/last-gr", (_, res) => {
     .catch((err) => res.status(500).send({ status: "failed", err }));
 });
 
-app.get("/last-tc-serial", (_, res) => {
-  db.getLastTCSerial()
-    .then((value) => res.send({ status: "success", tc_serial: value }))
-    .catch((err) => res.status(500).send({ status: "failed", err }));
-});
+// app.get("/last-tc-serial", (_, res) => {
+//   db.lastSerial()
+//     .then((value) => res.send({ status: "success", tc_serial: value }))
+//     .catch((err) => res.status(500).send({ status: "failed", err }));
+// });
 app.get("/last-serial/:doc_type", routes.getLastSerial);
 app.post("/last-serial/", routes.incSerial);
 

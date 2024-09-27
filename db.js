@@ -159,7 +159,6 @@ module.exports = {
   getStudentByID,
   getStudentIDs,
   getLastGRFromDB,
-  getLastTCSerial,
   lastSerial,
   incrementSerial,
 };
