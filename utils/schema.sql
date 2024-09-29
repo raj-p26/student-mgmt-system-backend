@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS student_records (
     enrollment_no                  VARCHAR(30),                        -- enrollment number of the student
     abc_id                         VARCHAR(12),                        -- ABC ID of the student
     gr_no                          VARCHAR(30),                        -- GR number of the student
+    udisk_no                       VARCHAR(30),
     aadhar_number                  VARCHAR(20)  NOT NULL,              -- aadhar number of the student
     stream                         VARCHAR(150)  NOT NULL,             -- stream in which student wants to take admission
     semester                       INT(3),                             -- semester
