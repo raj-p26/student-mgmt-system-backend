@@ -5,7 +5,7 @@ const config = require("./utils/config");
 const DB_NAME = config.DB_NAME;
 
 if (DB_NAME == undefined) {
-  console.log("Ain't no way DB_URL is not set in .env");
+  console.log("Ain't no way DB_NAME is not set in .env");
   process.exit(1);
 }
 
@@ -33,7 +33,7 @@ function insertStudent(student) {
       student.tertiary_secondary_subject,
       student.gender,
       student.email,
-      student.wh_no,
+      student.whatsapp_no,
       student.surname,
       student.name,
       student.fathername,
@@ -46,7 +46,7 @@ function insertStudent(student) {
       student.birth_date,
       student.birth_place,
       student.caste,
-      student.parent_no,
+      student.parent_contact_no,
       student.last_organization_studied_from,
       student.last_studied_year,
       student.elective_course,
@@ -59,7 +59,7 @@ function insertStudent(student) {
       }
 
       return null;
-    }
+    },
   );
 }
 
@@ -160,11 +160,14 @@ function incrementSerial(uuid, docName, docType) {
 function hasDocument(uuid, docType) {
   return new Promise((res, rej) => {
     const query = queries[`has_${docType}`];
+    console.log(query);
     if (query === undefined) rej("Not valid document");
 
     conn.query(query, [uuid], (err, results) => {
-      if (err !== null) rej(err);
-      else res(results[0].exists_ > 0);
+      if (err !== null) {
+        console.log(err);
+        rej(err);
+      } else res(results[0].exists_ > 0);
     });
   });
 }

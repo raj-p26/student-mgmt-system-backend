@@ -109,7 +109,7 @@ function incSerial(req, res) {
   db.incrementSerial(
     req.headers.uuid,
     req.headers.docname,
-    req.headers.doc_type
+    req.headers.doc_type,
   )
     .then((val) => res.send({ status: "success", message: val }))
     .catch((err) => res.status(500).send({ status: "failed", message: err }));
@@ -124,6 +124,12 @@ function hasDocument(req, res) {
     .then((exists) => res.send({ status: "ok", exists }))
     .catch((err) => res.status(500).send({ status: "failed", err }));
 }
+
+/**
+ * @param {Request} req request object
+ * @param {Response} res response object
+ */
+function updateStudent(req, res) {}
 
 module.exports = {
   addStudent,

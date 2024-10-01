@@ -1,6 +1,9 @@
-DROP TABLE IF EXISTS student_records;
 DROP TABLE IF EXISTS administration;
-DROP TABLE IF EXISTS tc_docs;
+DROP TABLE IF EXISTS tc_doc;
+DROP TABLE IF EXISTS first_trial_doc;
+DROP TABLE IF EXISTS no_objection_doc;
+DROP TABLE IF EXISTS bonafide_doc;
+DROP TABLE IF EXISTS student_records;
 
 CREATE TABLE IF NOT EXISTS student_records (
     id                             VARCHAR(40)  NOT NULL PRIMARY KEY,  -- UUID of the Record
@@ -8,7 +11,7 @@ CREATE TABLE IF NOT EXISTS student_records (
     abc_id                         VARCHAR(12),                        -- ABC ID of the student
     gr_no                          VARCHAR(30),                        -- GR number of the student
     udisk_no                       VARCHAR(30),
-    aadhar_number                  VARCHAR(20)  NOT NULL,              -- aadhar number of the student
+    aadhar_number                  VARCHAR(20)   NOT NULL,              -- aadhar number of the student
     stream                         VARCHAR(150)  NOT NULL,             -- stream in which student wants to take admission
     semester                       INT(3),                             -- semester
     main_course                    VARCHAR(20),                        -- main course selected by student
