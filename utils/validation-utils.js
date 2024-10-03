@@ -4,9 +4,15 @@ const fs = require("fs");
 
 const storage = multer.diskStorage({
   destination: (req, _, callback) => {
+    /// Experimental
+    if (req.headers.old_file) {
+      fs.rmSync(`uploads/${req.headers.old_file}`);
+    }
+
     if (!req.headers.uuid) {
       req.headers.uuid = uuidV4();
     }
+
     const uploadPath = `uploads/${req.headers.uuid}`;
     fs.mkdirSync(uploadPath, { recursive: true });
 

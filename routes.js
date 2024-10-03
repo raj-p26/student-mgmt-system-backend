@@ -129,7 +129,13 @@ function hasDocument(req, res) {
  * @param {Request} req request object
  * @param {Response} res response object
  */
-function updateStudent(req, res) {}
+function updateStudent(req, res) {
+  let student = { ...req.body };
+
+  db.updateStudent(student, req.params.id)
+    .then((result) => res.send({ result }))
+    .catch((err) => res.status(500).send({ err }));
+}
 
 module.exports = {
   addStudent,
@@ -140,4 +146,5 @@ module.exports = {
   getLastSerial,
   incSerial,
   hasDocument,
+  updateStudent,
 };

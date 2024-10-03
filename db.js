@@ -28,7 +28,7 @@ function insertStudent(student) {
       student.aadhar_number,
       student.stream,
       student.semester,
-      student.main_course,
+      student.main_subject,
       student.first_secondary_subject,
       student.tertiary_secondary_subject,
       student.gender,
@@ -140,7 +140,7 @@ function lastSerial(docType) {
  * @param {string} uuid uuid of the student
  * @param {string} docName name of the document
  * @param {string} docType type of the document
- * @returns idk, man. Figure out on your own.
+ * @returns Some sort of promise. :)
  */
 function incrementSerial(uuid, docName, docType) {
   return new Promise((res, rej) => {
@@ -160,7 +160,7 @@ function incrementSerial(uuid, docName, docType) {
 function hasDocument(uuid, docType) {
   return new Promise((res, rej) => {
     const query = queries[`has_${docType}`];
-    console.log(query);
+    // console.log(query);
     if (query === undefined) rej("Not valid document");
 
     conn.query(query, [uuid], (err, results) => {
@@ -168,6 +168,66 @@ function hasDocument(uuid, docType) {
         console.log(err);
         rej(err);
       } else res(results[0].exists_ > 0);
+    });
+  });
+}
+
+function updateStudent(student, id) {
+  return new Promise((res, rej) => {
+    const query = queries.updateStudent;
+
+    conn.query(
+      query,
+      [
+        student.enrollment_no,
+        student.abc_id,
+        student.gr_no,
+        student.udisk_no,
+        student.aadhar_number,
+        student.stream,
+        student.semester,
+        student.main_subject,
+        student.first_secondary_subject,
+        student.tertiary_secondary_subject,
+        student.gender,
+        student.email,
+        student.whatsapp_no,
+        student.surname,
+        student.name,
+        student.fathername,
+        student.father_name,
+        student.mother_name,
+        student.address,
+        student.city,
+        student.district,
+        student.pincode,
+        student.birth_date,
+        student.birth_place,
+        student.caste,
+        student.parent_contact_no,
+        student.last_organization_studied_from,
+        student.last_studied_year,
+        student.elective_course,
+        id,
+      ],
+      (err, _results, _fields) => {
+        if (err !== null) {
+          rej(err.sqlMessage);
+        } else {
+          res("success");
+        }
+      },
+    );
+  });
+}
+
+/** @param {string} id */
+function getStudentImage(id) {
+  return new Promise((res, rej) => {
+    conn.query(queries.getImage, [id], (err, results) => {
+      if (err !== null) rej(err.sqlMessage);
+      else if (results[0] === undefined) rej("Not Found");
+      else res(results[0].student_image);
     });
   });
 }
@@ -181,4 +241,6 @@ module.exports = {
   lastSerial,
   incrementSerial,
   hasDocument,
+  updateStudent,
+  getStudentImage,
 };
