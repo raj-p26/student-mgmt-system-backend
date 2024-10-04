@@ -24,6 +24,7 @@ function insertStudent(student) {
       student.id,
       student.enrollment_no,
       student.abc_id,
+      student.udisk_no,
       student.gr_no,
       student.aadhar_number,
       student.stream,
@@ -69,6 +70,7 @@ function allStudents() {
       if (err != null) {
         reject(err.sqlMessage);
       } else {
+        // console.log(results);
         resolve(results);
       }
     });

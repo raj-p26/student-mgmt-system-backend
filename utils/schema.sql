@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS student_records (
     city                           VARCHAR(40),                        -- city of the student
     district                       VARCHAR(40),                        -- district of the student
     pincode                        VARCHAR(6),                         -- pincode of the city
-    birth_date                     DATE,                               -- birth date of the student
+    birth_date                     VARCHAR(20),                        -- birth date of the student
     birth_place                    VARCHAR(40),                        -- birth place of the student
     caste                          VARCHAR(30),                        -- caste of the student
     parent_contact_no              VARCHAR(15),                        -- parent's contact number
