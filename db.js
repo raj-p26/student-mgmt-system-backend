@@ -241,6 +241,25 @@ function getStudentImage(id) {
   });
 }
 
+/**
+ *
+ * @param {string} username admin username
+ * @param {string} password admin password
+ */
+function adminExists(username, password) {
+  return new Promise((res, rej) => {
+    conn.query(queries.adminCreds, [username, password], (err, results) => {
+      if (err !== null) {
+        rej(err.sqlMessage);
+      } else if (results.length === 0) {
+        rej("Invalid Credentials");
+      } else {
+        res(results[0].exists_);
+      }
+    });
+  });
+}
+
 module.exports = {
   insertStudent,
   allStudents,
@@ -252,4 +271,5 @@ module.exports = {
   hasDocument,
   updateStudent,
   getStudentImage,
+  adminExists,
 };

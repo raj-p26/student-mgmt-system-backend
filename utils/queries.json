@@ -18,5 +18,6 @@
   "has_no-objection": "SELECT COUNT(*) AS exists_ FROM no_objection_doc WHERE student_id = ?",
   "has_first-trial": "SELECT COUNT(*) AS exists_ FROM first_trial_doc WHERE student_id = ?",
   "updateStudent": "UPDATE student_records SET enrollment_no=?, abc_id=?, gr_no=?, udisk_no=?, aadhar_number=?, stream=?, semester=?, main_course=?, first_secondary_subject=?, tertiary_secondary_subject=?, student_gender=?, email=?, whatsapp_no=?, surname=?, name=?, fathername=?, father_name=?, mother_name=?, address=?, city=?, district=?, pincode=?, birth_date=?, birth_place=?, caste=?, parent_contact_no=?, last_organization_studied_from=?, last_studied_year=?, elective_course=? WHERE id=?",
-  "getImage": "SELECT student_image FROM student_records WHERE id=?"
+  "getImage": "SELECT student_image FROM student_records WHERE id=?",
+  "adminCreds": "SELECT 1 AS exists_ FROM administration WHERE username=? AND password_=?"
 }

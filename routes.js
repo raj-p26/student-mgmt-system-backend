@@ -137,6 +137,23 @@ function updateStudent(req, res) {
     .catch((err) => res.status(500).send({ err }));
 }
 
+/**
+ * @param {Request} req request object
+ * @param {Response} res response object
+ */
+function adminCredentials(req, res) {
+  const name = req.body.username;
+  const password = req.body.password;
+
+  db.adminExists(name, password)
+    .then((val) => res.send({ status: "success", exists: val }))
+    .catch((err) => {
+      let status = err === "Invalid Credentials" ? 401 : 500;
+
+      res.status(status).send({ status: "failed", err });
+    });
+}
+
 module.exports = {
   addStudent,
   getStudents,
@@ -147,4 +164,5 @@ module.exports = {
   incSerial,
   hasDocument,
   updateStudent,
+  adminCredentials,
 };

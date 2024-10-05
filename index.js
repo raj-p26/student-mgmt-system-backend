@@ -45,4 +45,6 @@ app.get("/:id/get-img", fileRoutes.getImage);
 
 app.post("/:id/edit", upload.any(), routes.updateStudent);
 
+app.post("/admin-creds", upload.any(), routes.adminCredentials);
+
 module.exports = app;
