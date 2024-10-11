@@ -38,9 +38,9 @@ function addStudent(req, res) {
  * @param {Request} _ request object
  * @param {Response} res response object
  */
-async function getStudents(_, res) {
+async function getStudents(req, res) {
   return db
-    .allStudents()
+    .allStudents(req.params.type)
     .then((records) => res.send({ status: "success", students: records }))
     .catch((e) => {
       console.log(e);
