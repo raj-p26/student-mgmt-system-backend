@@ -13,7 +13,7 @@ app.get("/", function (_, res) {
   res.send({ checkHealth: "done" });
 });
 
-app.get("/students/", routes.getStudents);
+app.get("/students/:type", routes.getStudents);
 app.post("/students/", validateInsertStudent, routes.addStudent);
 
 app.get("/students/:id", routes.studentByID);
