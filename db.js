@@ -52,6 +52,7 @@ function insertStudent(student) {
       student.last_studied_year,
       student.elective_course,
       student.studentimg,
+      student.institute_type
     ],
     (err, _results, _fields) => {
       if (err != null || err != undefined) {
