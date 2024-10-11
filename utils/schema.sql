@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS student_records (
     last_studied_year              INT(4),                             -- Year when the student last studied in above mentioned last organization
     elective_course                VARCHAR(40),                        -- Optional course selected by the student
     student_image                  TEXT,                               -- Image of the student
+    institute_type.                VARCHAR(4),
     inserted_at                    TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Timestamp when record was added
 ) ENGINE InnoDB;
 
