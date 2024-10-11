@@ -64,9 +64,9 @@ function insertStudent(student) {
   );
 }
 
-function allStudents() {
+function allStudents(institute_type) {
   return new Promise((resolve, reject) => {
-    conn.query(queries.selectAll, function (err, results) {
+    conn.query(queries.selectAll, [institute_type], function (err, results) {
       if (err != null) {
         reject(err.sqlMessage);
       } else {
