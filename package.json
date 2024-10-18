@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "start.js",
   "scripts": {
-    "start": "node ./start.js",
+    "start": "nodemon ./start.js",
     "test": "jest --watchAll tests/*.test.js"
   },
   "dependencies": {

@@ -52,7 +52,7 @@ function insertStudent(student) {
       student.last_studied_year,
       student.elective_course,
       student.studentimg,
-      student.institute_type
+      student.institute_type,
     ],
     (err, _results, _fields) => {
       if (err != null || err != undefined) {
@@ -61,7 +61,7 @@ function insertStudent(student) {
       }
 
       return null;
-    },
+    }
   );
 }
 
@@ -226,7 +226,7 @@ function updateStudent(student, id) {
         } else {
           res("success");
         }
-      },
+      }
     );
   });
 }
@@ -261,6 +261,18 @@ function adminExists(username, password) {
   });
 }
 
+/**
+ * @param {string} id id of the student
+ */
+function docID(id) {
+  return new Promise((res, rej) => {
+    conn.query(queries.getDocByID, [id], (err, results) => {
+      if (err !== null) rej(err.sqlMessage);
+      else res({ ...results[0] });
+    });
+  });
+}
+
 module.exports = {
   insertStudent,
   allStudents,
@@ -273,4 +285,5 @@ module.exports = {
   updateStudent,
   getStudentImage,
   adminExists,
+  docID,
 };

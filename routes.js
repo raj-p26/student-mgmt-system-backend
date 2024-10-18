@@ -109,7 +109,7 @@ function incSerial(req, res) {
   db.incrementSerial(
     req.headers.uuid,
     req.headers.docname,
-    req.headers.doc_type,
+    req.headers.doc_type
   )
     .then((val) => res.send({ status: "success", message: val }))
     .catch((err) => res.status(500).send({ status: "failed", message: err }));
@@ -154,6 +154,26 @@ function adminCredentials(req, res) {
     });
 }
 
+/**
+ * @param {Request} req request object
+ * @param {Response} res response object
+ */
+function getDocByID(req, res) {
+  db.docID(req.params.id, req.params.docname)
+    .then((documents) => {
+      res.send({
+        status: "success",
+        documents,
+      });
+    })
+    .catch((err) => {
+      res.status(500).send({
+        status: "failed",
+        err,
+      });
+    });
+}
+
 module.exports = {
   addStudent,
   getStudents,
@@ -165,4 +185,5 @@ module.exports = {
   hasDocument,
   updateStudent,
   adminCredentials,
+  getDocByID,
 };
