@@ -13,15 +13,6 @@ app.get("/", function (_, res) {
   res.send({ checkHealth: "done" });
 });
 
-/*
-SELECT bd.doc_name as bonafide, tc.doc_name as tcd, ft.doc_name as ftd, noc.doc_name as nocd
-FROM student_records s
-JOIN bonafide_doc bd ON s.id = bd.student_id
-JOIN tc_doc tc ON s.id = tc.student_id
-JOIN first_trial_doc ft ON s.id = ft.student_id
-JOIN no_objection_doc noc ON s.id = noc.student_id;
- */
-
 app.get("/students/:type", routes.getStudents);
 app.post("/students/", validateInsertStudent, routes.addStudent);
 

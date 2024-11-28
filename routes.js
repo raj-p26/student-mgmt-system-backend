@@ -39,13 +39,12 @@ function addStudent(req, res) {
  * @param {Response} res response object
  */
 async function getStudents(req, res) {
-  return db
-    .allStudents(req.params.type)
-    .then((records) => res.send({ status: "success", students: records }))
-    .catch((e) => {
-      console.log(e);
-      res.status(500).send({ error: e, status: "failed" });
-    });
+  try {
+    const students = await db.allStudents(req.params.type);
+    res.send({ status: "success", students });
+  } catch (e) {
+    res.status(500).send({ error: e, status: "failed" });
+  }
 }
 
 /**
