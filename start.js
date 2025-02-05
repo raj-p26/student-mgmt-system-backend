@@ -1,8 +1,10 @@
-const app = require("./index");
-const config = require("./utils/config");
+// const app = require("./index");
+// const config = require("./utils/config");
 
-const server = app.listen(config.PORT, config.HOST, () => {
-  console.log(`App listening on http://${config.HOST}:${config.PORT}`);
+import app from "./index.js";
+import {HOST, PORT} from "./utils/config.js";
+
+export const server = app.listen(PORT, HOST, () => {
+  console.log(`App listening on http://${HOST}:${PORT}`);
 });
 
-module.exports = server;

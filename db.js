@@ -1,26 +1,19 @@
-const mysql = require("mysql");
-const queries = require("./utils/queries.json");
-const config = require("./utils/config");
-
-const DB_NAME = config.DB_NAME;
+import queries from "./utils/queries.json" with { type: "json" };
+import { DB_NAME } from "./utils/config.js";
+import Database from "better-sqlite3";
 
 if (DB_NAME == undefined) {
-  console.log("Ain't no way DB_NAME is not set in .env");
+  console.log("DB_NAME must be set in .env file");
   process.exit(1);
 }
 
-const conn = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: DB_NAME,
-});
+const db = new Database(DB_NAME);
 
 /** @returns {string | null} any errors occured from db */
-function insertStudent(student) {
-  conn.query(
-    queries.insertStudent,
-    [
+export function insertStudent(student) {
+    try {
+    let dbResult = db.prepare(queries.insertStudent)
+        .run([
       student.id,
       student.enrollment_no,
       student.abc_id,
@@ -53,97 +46,97 @@ function insertStudent(student) {
       student.elective_course,
       student.studentimg,
       student.institute_type,
-    ],
-    (err, _results, _fields) => {
-      if (err != null || err != undefined) {
-        console.log(err.sqlMessage);
-        return err.sqlMessage;
-      }
+        ]);
 
-      return null;
+        if (!dbResult) {
+            throw new Error("DB Result empty");
+        }
+
+        return null;
+    } catch (err) {
+        return err;
     }
-  );
 }
 
-function allStudents(institute_type) {
-  return new Promise((resolve, reject) => {
-    conn.query(queries.selectAll, [institute_type], function (err, results) {
-      if (err != null) {
-        reject(err.sqlMessage);
-      } else {
-        // console.log(results);
-        resolve(results);
-      }
-    });
-  });
+export function allStudents() {
+    try {
+        const results = db
+            .prepare(queries.selectAllNew)
+            .all();
+        return results;
+    } catch {
+        return null;
+    }
 }
 
 /**
  * Returns either student or error.
  * @param {string} id ID of the student
  */
-function getStudentByID(id) {
-  return new Promise((resolve, reject) => {
-    conn.query(queries.selectByID, [id], function (err, results, _fields) {
-      if (err != null) {
-        reject(err);
-      } else if (results[0] == undefined) {
-        reject("Not Found");
-      } else {
-        resolve(results[0]);
-      }
-    });
-  });
-}
+export function getStudentByID(id) {
+    try {
+        let student = db
+            .prepare(queries.selectByID)
+            .get(id);
 
-function getStudentIDs() {
-  return new Promise((resolve, reject) => {
-    conn.query(queries.selectIDs, function (err, results) {
-      if (err != null) {
-        reject(err.sqlMessage);
-      } else {
-        resolve(results);
-      }
-    });
-  });
-}
+        if (!student) throw new Error();
 
-function getLastGRFromDB() {
-  return new Promise((resolve, reject) => {
-    conn.query(queries.lastGR, function (err, results) {
-      if (err != null) {
-        reject(err.sqlMessage);
-      } else {
-        if (results.length === 0) {
-          resolve(0);
-        } else if (results[0].gr_no === "") {
-          resolve(0);
-        } else {
-          let gr_no = results[0].gr_no;
-          resolve(gr_no.split("-")[3]);
-        }
-      }
-    });
-  });
+        return student;
+    } catch {
+        return null;
+    }
 }
 
 /**
- * returns promise containing last serial number of any given document.
+ * @deprecated
+ */
+export function getStudentIDs() {
+    try {
+        let studentIDs = db
+            .prepare(queries.selectIDs)
+            .all();
+
+        return studentIDs;
+    } catch {
+        return null;
+    }
+}
+
+/**
+ * @deprecated No need for this function
+ */
+export function getLastGRFromDB() {
+    try {
+        const result = db.prepare(queries.lastGR).get();
+
+        console.log(result);
+        return null;
+    } catch (err) {
+        console.log(err);
+        return err;
+    }
+}
+
+/**
  * @param {string} docType document type
  */
-function lastSerial(docType) {
-  return new Promise((res, rej) => {
+export function lastSerial(docType) {
+    try {
     const query = queries[`last_${docType}_Serial`];
-    if (query === undefined) rej("invalid document type");
+    if (query === undefined) throw new Error("invalid document type");
 
-    conn.query(query, (err, results) => {
-      if (err != null) {
-        rej(err.sqlMessage);
-      } else {
-        results.length === 0 ? res("") : res(results[0].serial_number || "");
-      }
-    });
-  });
+        let result = db.prepare(query)
+            .get();
+
+        if (result) {
+            return res.serial_number || 0;
+        } else {
+            return 0;
+        }
+
+    } catch(err) {
+        return err;
+    }
 }
 
 /**
@@ -152,87 +145,96 @@ function lastSerial(docType) {
  * @param {string} docType type of the document
  * @returns Some sort of promise. :)
  */
-function incrementSerial(uuid, docName, docType) {
-  return new Promise((res, rej) => {
-    const query = queries[`increment_${docType}_Serial`];
-    if (query === undefined) rej("Invalid document Type");
+export function incrementSerial(uuid, docName, docType) {
+    try {
+        const query = queries[`increment_${docType}_Serial`];
+        if (query === undefined) throw new Error("Invalid document Type");
 
-    conn.query(query, [docName, uuid], (err) => {
-      err != null ? rej(err) : res("done");
-    });
-  });
+        let result = db.prepare(query)
+            .get(docName, uuid);
+
+        if (!result) {
+            return null;
+        }
+        return "done";
+    } catch {
+        return null;
+    }
 }
 
 /**
  * @param {string} uuid student's UUID
  * @param {string} docType type of the document
+ * @returns {number | null} exists or not
  */
-function hasDocument(uuid, docType) {
-  return new Promise((res, rej) => {
-    const query = queries[`has_${docType}`];
-    // console.log(query);
-    if (query === undefined) rej("Not valid document");
+export function hasDocument(uuid, docType) {
+    try {
+        const query = queries[`has_${docType}`];
+        if (query === undefined) throw new Error("Not valid document");
 
-    conn.query(query, [uuid], (err, results) => {
-      if (err !== null) {
+        const result = db.prepare(query)
+            .get(uuid);
+        return result.exists_;
+    } catch (err) {
+        console.error("error", err);
+        return null;
+    }
+}
+
+export function updateStudent(student, id) {
+    try {
+        const result = db.prepare(queries.updateStudent)
+            .run([
+                student.enrollment_no,
+                student.abc_id,
+                student.gr_no,
+                student.udisk_no,
+                student.aadhar_number,
+                student.stream,
+                student.semester,
+                student.main_subject,
+                student.first_secondary_subject,
+                student.tertiary_secondary_subject,
+                student.gender,
+                student.email,
+                student.whatsapp_no,
+                student.surname,
+                student.name,
+                student.fathername,
+                student.father_name,
+                student.mother_name,
+                student.address,
+                student.city,
+                student.district,
+                student.pincode,
+                student.birth_date,
+                student.birth_place,
+                student.caste,
+                student.parent_contact_no,
+                student.last_organization_studied_from,
+                student.last_studied_year,
+                student.elective_course,
+                id,
+            ]);
+
+        return result.changes;
+    } catch (err) {
         console.log(err);
-        rej(err);
-      } else res(results[0].exists_ > 0);
-    });
-  });
+        return null;
+    }
 }
 
-function updateStudent(student, id) {
-  return new Promise((res, rej) => {
-    const query = queries.updateStudent;
-
-    conn.query(
-      query,
-      [
-        student.enrollment_no,
-        student.abc_id,
-        student.gr_no,
-        student.udisk_no,
-        student.aadhar_number,
-        student.stream,
-        student.semester,
-        student.main_subject,
-        student.first_secondary_subject,
-        student.tertiary_secondary_subject,
-        student.gender,
-        student.email,
-        student.whatsapp_no,
-        student.surname,
-        student.name,
-        student.fathername,
-        student.father_name,
-        student.mother_name,
-        student.address,
-        student.city,
-        student.district,
-        student.pincode,
-        student.birth_date,
-        student.birth_place,
-        student.caste,
-        student.parent_contact_no,
-        student.last_organization_studied_from,
-        student.last_studied_year,
-        student.elective_course,
-        id,
-      ],
-      (err, _results, _fields) => {
-        if (err !== null) {
-          rej(err.sqlMessage);
-        } else {
-          res("success");
-        }
-      }
-    );
-  });
-}
-
+/// To be tested
 /** @param {string} id */
-function getStudentImage(id) {
+export function getStudentImage(id) {
+    try {
+        const result = db.prepare(queries.getImage)
+            .get(id);
+        console.log(result);
+    } catch(err) {
+        console.log(err);
+        return err;
+    }
   return new Promise((res, rej) => {
     conn.query(queries.getImage, [id], (err, results) => {
       if (err !== null) rej(err.sqlMessage);
@@ -247,43 +249,38 @@ function getStudentImage(id) {
  * @param {string} username admin username
  * @param {string} password admin password
  */
-function adminExists(username, password) {
-  return new Promise((res, rej) => {
-    conn.query(queries.adminCreds, [username, password], (err, results) => {
-      if (err !== null) {
-        rej(err.sqlMessage);
-      } else if (results.length === 0) {
-        rej("Invalid Credentials");
-      } else {
-        res(results[0].exists_);
-      }
-    });
-  });
+export function adminExists(username, password) {
+    try {
+        const result = db.prepare(queries.adminCreds)
+            .get(username, password);
+        return result.exists_ !== 0;
+    } catch (err) {
+        console.log(err);
+        return err;
+    }
 }
 
 /**
  * @param {string} id id of the student
  */
-function docID(id) {
-  return new Promise((res, rej) => {
-    conn.query(queries.getDocByID, [id], (err, results) => {
-      if (err !== null) rej(err.sqlMessage);
-      else res({ ...results[0] });
-    });
-  });
+export function docID(id) {
+    return db.prepare(queries.getDocByID)
+        .get(id);
 }
 
-module.exports = {
-  insertStudent,
-  allStudents,
-  getStudentByID,
-  getStudentIDs,
-  getLastGRFromDB,
-  lastSerial,
-  incrementSerial,
-  hasDocument,
-  updateStudent,
-  getStudentImage,
-  adminExists,
-  docID,
-};
+export function insertUsingCSVData(values) {
+    try {
+        values.forEach(val => {
+            let cols = Object.keys(val).join(", ");
+            let params = Object.values(val).fill("?").join(", ");
+            let query = `INSERT INTO students (${cols}) VALUES (${params})`;
+
+            db.prepare(query)
+                .run(Object.values(val));
+        });
+    } catch(err) {
+        console.error(err);
+        return null;
+    }
+}
+

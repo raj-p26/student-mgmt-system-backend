@@ -1,6 +1,9 @@
-const multer = require("multer");
-const { v4: uuidV4 } = require("uuid");
-const fs = require("fs");
+// const multer = require("multer");
+// const { v4: uuidV4 } = require("uuid");
+// const fs = require("fs");
+import multer from "multer";
+import { v4 } from "uuid";
+import fs from "node:fs";
 
 const storage = multer.diskStorage({
   destination: (req, _, callback) => {
@@ -10,7 +13,7 @@ const storage = multer.diskStorage({
     }
 
     if (!req.headers.uuid) {
-      req.headers.uuid = uuidV4();
+      req.headers.uuid = v4();
     }
 
     const uploadPath = `uploads/${req.headers.uuid}`;
@@ -18,16 +21,12 @@ const storage = multer.diskStorage({
 
     callback(null, uploadPath);
   },
-  filename: (req, file, callback) => {
+  filename: (_req, file, callback) => {
     callback(null, file.originalname);
   },
 });
 
-const upload = multer({ storage });
+export const upload = multer({ storage });
 
-const validateInsertStudent = [upload.fields([{ name: "studentimg" }])];
+export const validateInsertStudent = [upload.fields([{ name: "studentimg" }])];
 
-module.exports = {
-  validateInsertStudent,
-  upload,
-};
