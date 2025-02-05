@@ -1,9 +1,7 @@
-const dotenv = require("dotenv");
+import { config } from "dotenv";
 
-dotenv.config();
+config();
 
-module.exports = {
-  DB_NAME: process.env.DB_NAME,
-  HOST: process.env.HOST || "localhost",
-  PORT: process.env.PORT || 8000,
-};
+export const DB_NAME = process.env.DB_NAME;
+export const HOST = process.env.HOST || "localhost";
+export const PORT = process.env.PORT || 8000;

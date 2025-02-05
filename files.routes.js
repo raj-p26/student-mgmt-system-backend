@@ -1,4 +1,5 @@
-const db = require("./db");
+// const db = require("./db");
+import * as db from "./db.js";
 
 /**
  * @typedef {import("express").Request} Request

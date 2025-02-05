@@ -1,4 +1,6 @@
-const db = require("./db");
+import * as db from "./db.js";
+import fs from "node:fs";
+import csv from "csv-parser";
 
 /**
  * @typedef {import("express").Request} Request
@@ -9,7 +11,7 @@ const db = require("./db");
  * @param {Request} req request object
  * @param {Response} res response object
  */
-function addStudent(req, res) {
+export function addStudent(req, res) {
   if (!req.files) {
     return res.status(400).json({ message: "No files" });
   }
@@ -38,9 +40,9 @@ function addStudent(req, res) {
  * @param {Request} _ request object
  * @param {Response} res response object
  */
-async function getStudents(req, res) {
+export async function getStudents(req, res) {
   try {
-    const students = await db.allStudents(req.params.type);
+    const students = db.allStudents(req.params.type);
     res.send({ status: "success", students });
   } catch (e) {
     res.status(500).send({ error: e, status: "failed" });
@@ -55,7 +57,7 @@ async function getStudents(req, res) {
  * @param {Request} _ request object
  * @param {Response} res response object
  */
-async function getStudentIDs(_, res) {
+export async function getStudentIDs(_, res) {
   db.getStudentIDs()
     .then((ids) => res.send({ ids, status: "success" }))
     .catch((err) => res.status(500).send({ status: "failed", err }));
@@ -67,44 +69,44 @@ async function getStudentIDs(_, res) {
  * @param {Request} req request object
  * @param {Response} res response object
  */
-async function studentByID(req, res) {
+export async function studentByID(req, res) {
   const id = req.params.id;
 
-  db.getStudentByID(id)
-    .then((student) => {
-      res.send({ student, status: "success" });
-    })
-    .catch((e) => {
-      let statusCode = e === "Not Found" ? 400 : 500;
-      res.status(statusCode).send({ error: e, status: "failed" });
-    });
+  let student = db.getStudentByID(id);
+
+  if (student) {
+      res.send({student});
+  } else {
+      res.status(404).send({message: "Not Found"});
+  }
 }
 
 /**
+ * @deprecated no need for this too
+ *
  * @param {Request} _ request object
  * @param {Response} res response object
  */
-function getLastGR(_, res) {
-  db.getLastGRFromDB()
-    .then((gr) => res.send({ gr, status: "success" }))
-    .catch((err) => res.status(500).send({ status: "failed", err }));
+export function getLastGR(_, res) {
+  db.getLastGRFromDB();
+  res.send({ status: "success" });
 }
 
 /**
  * @param {Request} req request object
  * @param {Response} res response object
  */
-function getLastSerial(req, res) {
-  db.lastSerial(req.params.doc_type)
-    .then((serial) => res.send({ status: "success", serial }))
-    .catch((err) => res.status(500).send({ status: "failed", err }));
+export function getLastSerial(req, res) {
+  const serial = db.lastSerial(req.params.doc_type)
+
+  res.send({ status: "success", serial });
 }
 
 /**
  * @param {Request} req request object
  * @param {Response} res response object
  */
-function incSerial(req, res) {
+export function incSerial(req, res) {
   db.incrementSerial(
     req.headers.uuid,
     req.headers.docname,
@@ -118,17 +120,17 @@ function incSerial(req, res) {
  * @param {Request} req request object
  * @param {Response} res response object
  */
-function hasDocument(req, res) {
-  db.hasDocument(req.params.id, req.params.doc_type)
-    .then((exists) => res.send({ status: "ok", exists }))
-    .catch((err) => res.status(500).send({ status: "failed", err }));
+export function hasDocument(req, res) {
+  let exists = db.hasDocument(req.params.id, req.params.doc_type)
+
+  res.send({exists});
 }
 
 /**
  * @param {Request} req request object
  * @param {Response} res response object
  */
-function updateStudent(req, res) {
+export function updateStudent(req, res) {
   let student = { ...req.body };
 
   db.updateStudent(student, req.params.id)
@@ -140,16 +142,27 @@ function updateStudent(req, res) {
  * @param {Request} req request object
  * @param {Response} res response object
  */
-function adminCredentials(req, res) {
+export function adminCredentials(req, res) {
   const name = req.body.username;
   const password = req.body.password;
 
-  db.adminExists(name, password)
-    .then((val) => res.send({ status: "success", exists: val }))
-    .catch((err) => {
-      let status = err === "Invalid Credentials" ? 401 : 500;
+  const result = db.adminExists(name, password);
+    if (result === true) {
+        res.send({ status: "success", exists: true });
+    } else {
+        res.status(401).send({ status: "failed" });
+    }
+}
 
-      res.status(status).send({ status: "failed", err });
+/**
+ * @param {Request} req request object
+ * @param {Response} res response object
+ */
+export function getDocByID(req, res) {
+  const docData = db.docID(req.params.id, req.params.docname);
+    res.send({
+      status: "success",
+      docData,
     });
 }
 
@@ -157,32 +170,31 @@ function adminCredentials(req, res) {
  * @param {Request} req request object
  * @param {Response} res response object
  */
-function getDocByID(req, res) {
-  db.docID(req.params.id, req.params.docname)
-    .then((documents) => {
-      res.send({
-        status: "success",
-        documents,
-      });
-    })
-    .catch((err) => {
-      res.status(500).send({
-        status: "failed",
-        err,
-      });
+export function uploadCSV(req, res) {
+    const values = req.files[0].buffer.toString();
+    fs.writeFileSync("upload.csv", values);
+    const results = [];
+
+    fs.createReadStream("upload.csv")
+        .pipe(csv())
+        .on("data", (data) => results.push(data))
+        .on("finish", () => {
+          db.insertUsingCSVData(results);
     });
+
+    res.send({ status: "done" });
 }
 
-module.exports = {
-  addStudent,
-  getStudents,
-  studentByID,
-  getStudentIDs,
-  getLastGR,
-  getLastSerial,
-  incSerial,
-  hasDocument,
-  updateStudent,
-  adminCredentials,
-  getDocByID,
-};
+// module.exports = {
+//   addStudent,
+//   getStudents,
+//   studentByID,
+//   getStudentIDs,
+//   getLastGR,
+//   getLastSerial,
+//   incSerial,
+//   hasDocument,
+//   updateStudent,
+//   adminCredentials,
+//   getDocByID,
+// };

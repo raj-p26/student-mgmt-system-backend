@@ -3,6 +3,8 @@ node_modules/
 package-lock.json
 
 # Private stuff
+*.sqlite
+*.sqlite3
 *.db
 **.env
 **.env.*
