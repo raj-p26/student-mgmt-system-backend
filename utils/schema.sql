@@ -25,6 +25,8 @@ CREATE TABLE IF NOT EXISTS students (
     Passing_Year   VARCHAR(255),
     Seat_Number    VARCHAR(255),
     School_College VARCHAR(255),
+    gr_no          VARCHAR(50),
+    institute_type VARCHAR(50),
     inserted_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -41,33 +43,33 @@ CREATE TABLE IF NOT EXISTS first_trial_doc (
     serial_number INTEGER PRIMARY KEY AUTOINCREMENT,
     doc_name      VARCHAR(50) NOT NULL,
     student_id    VARCHAR(40) NOT NULL,
-    FOREIGN KEY(student_id) REFERENCES students(id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY(student_id) REFERENCES students(Sr_No) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS tc_doc (
     serial_number INTEGER PRIMARY KEY AUTOINCREMENT,
     doc_name      VARCHAR(255) NOT NULL,
     student_id    VARCHAR(40) NOT NULL,
-    FOREIGN KEY(student_id) REFERENCES students(id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY(student_id) REFERENCES students(Sr_No) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS bonafide_doc (
     serial_number INTEGER PRIMARY KEY AUTOINCREMENT,
     doc_name      VARCHAR(255) NOT NULL,
     student_id    VARCHAR(40) NOT NULL,
-    FOREIGN KEY(student_id) REFERENCES students(id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY(student_id) REFERENCES students(Sr_No) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS no_objection_doc (
     serial_number INTEGER PRIMARY KEY AUTOINCREMENT,
     doc_name      VARCHAR(255) NOT NULL,
     student_id    VARCHAR(40) NOT NULL,
-    FOREIGN KEY(student_id) REFERENCES students(id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY(student_id) REFERENCES students(Sr_No) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS fee_recipt_doc (
     serial_number INTEGER NOT NULL,
     doc_name      VARCHAR(255) NOT NULL,
     student_id    VARCHAR(40) NOT NULL,
-    FOREIGN KEY(student_id) REFERENCES students(id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY(student_id) REFERENCES students(Sr_No) ON DELETE CASCADE ON UPDATE CASCADE
 );

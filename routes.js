@@ -107,13 +107,19 @@ export function getLastSerial(req, res) {
  * @param {Response} res response object
  */
 export function incSerial(req, res) {
-  db.incrementSerial(
+  let [result, err] = db.incrementSerial(
     req.headers.uuid,
     req.headers.docname,
     req.headers.doc_type
-  )
-    .then((val) => res.send({ status: "success", message: val }))
-    .catch((err) => res.status(500).send({ status: "failed", message: err }));
+  );
+
+  if (err !== null) {
+    res.status(500).send({ status: "failed", message: err });
+  } else {
+    res.send({ status: "success", message: result });
+  }
+    // .then((val) => res.send({ status: "success", message: val }))
+    // .catch((err) => res.status(500).send({ status: "failed", message: err }));
 }
 
 /**

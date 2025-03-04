@@ -17,7 +17,7 @@ app.get("/", function (_, res) {
 });
 
 app.get("/all", function (_, res) {
-    const data = db.allNewStudents();
+    const data = db.allStudents();
 
     res.send({ data });
 });
@@ -31,12 +31,12 @@ app.get("/students/:id/has/:doc_type", routes.hasDocument);
 
 app.get("/students/:id/docs", routes.getDocByID);
 
-// app.get("/last-gr", (_, res) => {
-//   db.getLastGRFromDB();
-//     res.send({ status: "success" });
-//     // .then((val) => res.send({ status: "success", gr_no: val }))
-//     // .catch((err) => res.status(500).send({ status: "failed", err }));
-// });
+app.get("/last-gr", (_, res) => {
+  let gr_no = db.getLastGRFromDB();
+    res.send({ status: "success", gr_no });
+    // .then((val) => res.send({ status: "success", gr_no: val }))
+    // .catch((err) => res.status(500).send({ status: "failed", err }));
+});
 
 app.get("/last-serial/:doc_type", routes.getLastSerial);
 app.post("/last-serial/", routes.incSerial);
