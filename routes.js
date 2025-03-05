@@ -2,6 +2,8 @@ import * as db from "./db.js";
 import fs from "node:fs";
 import csv from "csv-parser";
 
+const STREAM = "bcom";
+
 /**
  * @typedef {import("express").Request} Request
  * @typedef {import("express").Response} Response
@@ -178,12 +180,14 @@ export function getDocByID(req, res) {
  */
 export function uploadCSV(req, res) {
     const values = req.files[0].buffer.toString();
+    const stream = req.body["Stream"];
+
     fs.writeFileSync("upload.csv", values);
     const results = [];
 
     fs.createReadStream("upload.csv")
         .pipe(csv())
-        .on("data", (data) => results.push(data))
+        .on("data", (data) => results.push({ ...data, institute_type: stream }))
         .on("finish", () => {
           db.insertUsingCSVData(results);
     });

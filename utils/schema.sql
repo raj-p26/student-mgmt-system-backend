@@ -25,8 +25,8 @@ CREATE TABLE IF NOT EXISTS students (
     Passing_Year   VARCHAR(255),
     Seat_Number    VARCHAR(255),
     School_College VARCHAR(255),
-    gr_no          VARCHAR(50),
-    institute_type VARCHAR(50),
+    -- gr_no          VARCHAR(50),
+    stream         VARCHAR(50),
     inserted_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

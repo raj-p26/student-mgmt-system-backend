@@ -8,7 +8,7 @@
   "last_first-trial_Serial": "SELECT serial_number FROM first_trial_doc ORDER BY serial_number DESC LIMIT 1",
   "last_bonafide_Serial": "SELECT serial_number FROM bonafide_doc ORDER BY serial_number DESC LIMIT 1",
   "last_tc_Serial": "SELECT serial_number FROM tc_doc ORDER BY serial_number DESC LIMIT 1",
-  "last_no-objection_Serial": "SELECT serial_number FROM tc_doc ORDER BY serial_number DESC LIMIT 1",
+  "last_no-objection_Serial": "SELECT serial_number FROM no_objection_doc ORDER BY serial_number DESC LIMIT 1",
   "increment_first-trial_Serial": "INSERT INTO first_trial_doc (doc_name, student_id) VALUES (?, ?)",
   "increment_tc_Serial": "INSERT INTO tc_doc (doc_name, student_id) VALUES (?, ?)",
   "increment_no-objection_Serial": "INSERT INTO no_objection_doc (doc_name, student_id) VALUES (?, ?)",
