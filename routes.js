@@ -187,7 +187,7 @@ export function uploadCSV(req, res) {
 
     fs.createReadStream("upload.csv")
         .pipe(csv())
-        .on("data", (data) => results.push({ ...data, institute_type: stream }))
+        .on("data", (data) => results.push({ ...data, stream }))
         .on("finish", () => {
           db.insertUsingCSVData(results);
     });
