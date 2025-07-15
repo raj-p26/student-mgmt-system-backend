@@ -2,11 +2,6 @@
   "name": "student-mgmt-system-backend",
   "version": "1.0.0",
   "main": "start.js",
-  "scripts": {
-    "start": "nodemon ./start.js",
-    "test": "jest --watchAll tests/*.test.js"
-  },
-  "type": "module",
   "dependencies": {
     "better-sqlite3": "^11.8.1",
     "cors": "^2.8.5",
@@ -19,5 +14,10 @@
     "nodemon": "^3.1.9",
     "supertest": "^7.0.0",
     "uuid": "8.3.2"
-  }
+  },
+  "scripts": {
+    "start": "nodemon ./start.js",
+    "test": "jest --watchAll tests/*.test.js"
+  },
+  "type": "module"
 }

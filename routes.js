@@ -1,6 +1,7 @@
 import * as db from "./db.js";
 import fs from "node:fs";
 import csv from "csv-parser";
+import { v4 } from "uuid";
 
 const STREAM = "bcom";
 
@@ -14,26 +15,29 @@ const STREAM = "bcom";
  * @param {Response} res response object
  */
 export function addStudent(req, res) {
-  if (!req.files) {
-    return res.status(400).json({ message: "No files" });
-  }
+  // if (!req.files) {
+  //   return res.status(400).json({ message: "No files" });
+  // }
 
-  const files = {};
+  // const files = {};
 
-  for (const fieldName in req.files) {
-    const file = req.files[fieldName][0];
-    files[fieldName] = file.path;
-  }
+  // for (const fieldName in req.files) {
+  //   const file = req.files[fieldName][0];
+  //   files[fieldName] = file.path;
+  // }
 
-  req.body.id = req.headers.uuid;
+  // req.body.id = req.headers.uuid;
+  console.log(req.body);
 
-  const err = db.insertStudent({ ...req.body, ...files });
+  const err = db.insertStudent({ ...req.body });
 
   if (err != null) {
+    console.log(err);
     return res.status(500).send({ status: "failed", message: err });
   }
 
-  res.send({ uuid: req.headers.uuid, status: "success" });
+  // res.send({ uuid: req.headers.uuid, status: "success" });
+  res.send({ status: "success" });
 }
 
 /**
@@ -77,9 +81,9 @@ export async function studentByID(req, res) {
   let student = db.getStudentByID(id);
 
   if (student) {
-      res.send({student});
+    res.send({ student });
   } else {
-      res.status(404).send({message: "Not Found"});
+    res.status(404).send({ message: "Not Found" });
   }
 }
 
@@ -99,7 +103,7 @@ export function getLastGR(_, res) {
  * @param {Response} res response object
  */
 export function getLastSerial(req, res) {
-  const serial = db.lastSerial(req.params.doc_type)
+  const serial = db.lastSerial(req.params.doc_type);
 
   res.send({ status: "success", serial });
 }
@@ -120,8 +124,8 @@ export function incSerial(req, res) {
   } else {
     res.send({ status: "success", message: result });
   }
-    // .then((val) => res.send({ status: "success", message: val }))
-    // .catch((err) => res.status(500).send({ status: "failed", message: err }));
+  // .then((val) => res.send({ status: "success", message: val }))
+  // .catch((err) => res.status(500).send({ status: "failed", message: err }));
 }
 
 /**
@@ -129,9 +133,9 @@ export function incSerial(req, res) {
  * @param {Response} res response object
  */
 export function hasDocument(req, res) {
-  let exists = db.hasDocument(req.params.id, req.params.doc_type)
+  let exists = db.hasDocument(req.params.id, req.params.doc_type);
 
-  res.send({exists});
+  res.send({ exists });
 }
 
 /**
@@ -155,11 +159,11 @@ export function adminCredentials(req, res) {
   const password = req.body.password;
 
   const result = db.adminExists(name, password);
-    if (result === true) {
-        res.send({ status: "success", exists: true });
-    } else {
-        res.status(401).send({ status: "failed" });
-    }
+  if (result === true) {
+    res.send({ status: "success", exists: true });
+  } else {
+    res.status(401).send({ status: "failed" });
+  }
 }
 
 /**
@@ -168,10 +172,10 @@ export function adminCredentials(req, res) {
  */
 export function getDocByID(req, res) {
   const docData = db.docID(req.params.id, req.params.docname);
-    res.send({
-      status: "success",
-      docData,
-    });
+  res.send({
+    status: "success",
+    docData,
+  });
 }
 
 /**
@@ -179,20 +183,20 @@ export function getDocByID(req, res) {
  * @param {Response} res response object
  */
 export function uploadCSV(req, res) {
-    const values = req.files[0].buffer.toString();
-    const stream = req.body["Stream"];
+  const values = req.files[0].buffer.toString();
+  const stream = req.body["Stream"];
 
-    fs.writeFileSync("upload.csv", values);
-    const results = [];
+  fs.writeFileSync("upload.csv", values);
+  const results = [];
 
-    fs.createReadStream("upload.csv")
-        .pipe(csv())
-        .on("data", (data) => results.push({ ...data, stream }))
-        .on("finish", () => {
-          db.insertUsingCSVData(results);
+  fs.createReadStream("upload.csv")
+    .pipe(csv())
+    .on("data", (data) => results.push({ ...data, stream }))
+    .on("finish", () => {
+      db.insertUsingCSVData(results);
     });
 
-    res.send({ status: "done" });
+  res.send({ status: "done" });
 }
 
 // module.exports = {

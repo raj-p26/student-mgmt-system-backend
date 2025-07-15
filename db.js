@@ -1,4 +1,4 @@
-import queries from "./utils/queries.json" with { type: "json" };
+import queries from "./utils/queries.json" with { type: "json"};
 import { DB_NAME } from "./utils/config.js";
 import Database from "better-sqlite3";
 
@@ -12,45 +12,34 @@ const db = new Database(DB_NAME);
 /** @returns {string | null} any errors occured from db */
 export function insertStudent(student) {
   try {
-    let dbResult = db.prepare(queries.insertStudent)
-      .run([
-        student.id,
-        student.enrollment_no,
-        student.abc_id,
-        student.udisk_no,
-        student.gr_no,
-        student.aadhar_number,
-        student.stream,
-        student.semester,
-        student.main_subject,
-        student.first_secondary_subject,
-        student.tertiary_secondary_subject,
-        student.gender,
-        student.email,
-        student.whatsapp_no,
-        student.surname,
-        student.name,
-        student.fathername,
-        student.father_name,
-        student.mother_name,
-        student.address,
-        student.city,
-        student.district,
-        student.pincode,
-        student.birth_date,
-        student.birth_place,
-        student.caste,
-        student.parent_contact_no,
-        student.last_organization_studied_from,
-        student.last_studied_year,
-        student.elective_course,
-        student.studentimg,
-        student.institute_type,
-      ]);
+    let dbResult = db.prepare(queries.insertStudent).run([
+      student.name,
+      student.whatsapp_no,
+      student.enrollment_no,
+      student.email,
+      student.birth_date,
+      student.gender,
+      student.address,
+      student.pincode,
+      student.city,
+      student.caste,
+      student.taluka,
+      student.district,
+      student.abc_id,
+      student.aadhar_number,
+      student.exam_name,
+      student.last_studied_year,
+      student.seat_number,
+      student.last_organization_studied_from,
+      student.is_disabled,
+      student.stream,
+      student.semester,
+      student.main_subject,
+      student.parent_contact_no,
+      student.institute_type,
+    ]);
 
-    if (!dbResult) {
-      throw new Error("DB Result empty");
-    }
+    if (!dbResult) throw new Error("DB Result empty");
 
     return null;
   } catch (err) {
@@ -60,9 +49,7 @@ export function insertStudent(student) {
 
 export function allStudents() {
   try {
-    const results = db
-      .prepare(queries.selectAllNew)
-      .all();
+    const results = db.prepare(queries.selectAllNew).all();
     return results;
   } catch {
     return null;
@@ -75,9 +62,7 @@ export function allStudents() {
  */
 export function getStudentByID(id) {
   try {
-    let student = db
-      .prepare(queries.selectByID)
-      .get(id);
+    let student = db.prepare(queries.selectByID).get(id);
 
     if (!student) throw new Error();
 
@@ -92,9 +77,7 @@ export function getStudentByID(id) {
  */
 export function getStudentIDs() {
   try {
-    let studentIDs = db
-      .prepare(queries.selectIDs)
-      .all();
+    let studentIDs = db.prepare(queries.selectIDs).all();
 
     return studentIDs;
   } catch {
@@ -123,15 +106,13 @@ export function lastSerial(docType) {
     const query = queries[`last_${docType}_Serial`];
     if (query === undefined) throw new Error("invalid document type");
 
-    let result = db.prepare(query)
-      .get();
+    let result = db.prepare(query).get();
 
     if (result !== undefined) {
       return result.serial_number || 0;
     } else {
       return 0;
     }
-
   } catch (err) {
     return 0;
   }
@@ -147,8 +128,7 @@ export function incrementSerial(uuid, docName, docType) {
   try {
     const query = queries[`increment_${docType}_Serial`];
     if (query === undefined) throw new Error("Invalid document Type");
-    let result = db.prepare(query)
-      .run(docName, uuid);
+    let result = db.prepare(query).run(docName, uuid);
 
     if (!result) throw new Error("Not Found");
     return ["done", null];
@@ -168,8 +148,7 @@ export function hasDocument(uuid, docType) {
     const query = queries[`has_${docType}`];
     if (query === undefined) throw new Error("Not valid document");
 
-    const result = db.prepare(query)
-      .get(uuid);
+    const result = db.prepare(query).get(uuid);
     return result.exists_;
   } catch (err) {
     console.error("error", err);
@@ -179,7 +158,8 @@ export function hasDocument(uuid, docType) {
 
 export function updateStudent(student, id) {
   try {
-    const result = db.prepare(queries.updateStudent)
+    const result = db
+      .prepare(queries.updateStudent)
       .run([
         student.enrollment_no,
         student.abc_id,
@@ -224,8 +204,7 @@ export function updateStudent(student, id) {
 /** @param {string} id */
 export function getStudentImage(id) {
   try {
-    const result = db.prepare(queries.getImage)
-      .get(id);
+    const result = db.prepare(queries.getImage).get(id);
     console.log(result);
   } catch (err) {
     console.log(err);
@@ -247,8 +226,7 @@ export function getStudentImage(id) {
  */
 export function adminExists(username, password) {
   try {
-    const result = db.prepare(queries.adminCreds)
-      .get(username, password);
+    const result = db.prepare(queries.adminCreds).get(username, password);
     return result.exists_ !== 0;
   } catch (err) {
     console.log(err);
@@ -260,23 +238,20 @@ export function adminExists(username, password) {
  * @param {string} id id of the student
  */
 export function docID(id) {
-  return db.prepare(queries.getDocByID)
-    .get(id);
+  return db.prepare(queries.getDocByID).get(id);
 }
 
 export function insertUsingCSVData(values) {
   try {
-    values.forEach(val => {
+    values.forEach((val) => {
       let cols = Object.keys(val).join(", ");
       let params = Object.values(val).fill("?").join(", ");
       let query = `INSERT INTO students (${cols}) VALUES (${params})`;
 
-      db.prepare(query)
-        .run(Object.values(val));
+      db.prepare(query).run(Object.values(val));
     });
   } catch (err) {
     console.error(err);
     return null;
   }
 }
-
