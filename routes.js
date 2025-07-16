@@ -87,15 +87,15 @@ export async function studentByID(req, res) {
   }
 }
 
-/**
- * @param {Request} req request object
- * @param {Response} res response object
- */
-export async function deleteStudent(req, res) {
-  const id = req.params.id;
-  db.deleteStudentByID(id);
-  res.send({ message: "see console" });
-}
+// /**
+//  * @param {Request} req request object
+//  * @param {Response} res response object
+//  */
+// export async function deleteStudent(req, res) {
+//   const id = req.params.id;
+//   db.deleteStudentByID(id);
+//   res.send({ message: "see console" });
+// }
 
 /**
  * @param {Request} req request object
@@ -103,11 +103,13 @@ export async function deleteStudent(req, res) {
  */
 export async function deleteStudents(req, res) {
   const ids = req.body.ids;
+  // console.log(ids);
   ids.forEach((id) => {
     db.deleteStudentByID(id);
   });
-  res.send({ message: "see console" });
+  res.send({ status: "success" });
 }
+// setSelectStudent(prev => prev.filter())
 
 /**
  * @deprecated no need for this too

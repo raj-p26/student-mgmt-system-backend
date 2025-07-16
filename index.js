@@ -1,7 +1,6 @@
 import cors from "cors";
 import express from "express";
 import * as routes from "./routes.js";
-// import bodyparser from "body-parser";
 import { upload } from "./utils/validation-utils.js";
 import * as db from "./db.js";
 import multer from "multer";
@@ -25,7 +24,6 @@ app.get("/all", function (_, res) {
 });
 
 app.get("/students/:type", routes.getStudents);
-// app.post("/students/", validateInsertStudent, routes.addStudent);
 app.post("/students/", routes.addStudent);
 
 app.get("/students/id/:id", routes.studentByID);
@@ -33,22 +31,11 @@ app.get("/students/id/:id", routes.studentByID);
 app.get("/students/:id/has/:doc_type", routes.hasDocument);
 
 app.get("/students/:id/docs", routes.getDocByID);
-app.delete("/students/:id", routes.deleteStudent);
+// app.delete("/students/:id", routes.deleteStudent);
 app.delete("/students/bulk-delete", routes.deleteStudents);
-
-// app.get("/last-gr", (_, res) => {
-//   let gr_no = db.getLastGRFromDB();
-//   res.send({ status: "success", gr_no });
-//   // .then((val) => res.send({ status: "success", gr_no: val }))
-//   // .catch((err) => res.status(500).send({ status: "failed", err }));
-// });
 
 app.get("/last-serial/:doc_type", routes.getLastSerial);
 app.post("/last-serial/", routes.incSerial);
-
-// app.post("/upload-doc", upload.single("doc"), fileRoutes.uploadDoc);
-
-// app.get("/:id/get-img", fileRoutes.getImage);
 
 app.post("/:id/edit", upload.any(), routes.updateStudent);
 
