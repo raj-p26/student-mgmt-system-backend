@@ -33,6 +33,8 @@ app.get("/students/id/:id", routes.studentByID);
 app.get("/students/:id/has/:doc_type", routes.hasDocument);
 
 app.get("/students/:id/docs", routes.getDocByID);
+app.delete("/students/:id", routes.deleteStudent);
+app.delete("/students/bulk-delete", routes.deleteStudents);
 
 // app.get("/last-gr", (_, res) => {
 //   let gr_no = db.getLastGRFromDB();

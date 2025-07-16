@@ -27,7 +27,7 @@ export function addStudent(req, res) {
   // }
 
   // req.body.id = req.headers.uuid;
-  console.log(req.body);
+  // console.log(req.body);
 
   const err = db.insertStudent({ ...req.body });
 
@@ -85,6 +85,28 @@ export async function studentByID(req, res) {
   } else {
     res.status(404).send({ message: "Not Found" });
   }
+}
+
+/**
+ * @param {Request} req request object
+ * @param {Response} res response object
+ */
+export async function deleteStudent(req, res) {
+  const id = req.params.id;
+  db.deleteStudentByID(id);
+  res.send({ message: "see console" });
+}
+
+/**
+ * @param {Request} req request object
+ * @param {Response} res response object
+ */
+export async function deleteStudents(req, res) {
+  const ids = req.body.ids;
+  ids.forEach((id) => {
+    db.deleteStudentByID(id);
+  });
+  res.send({ message: "see console" });
 }
 
 /**

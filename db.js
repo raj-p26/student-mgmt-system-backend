@@ -85,6 +85,18 @@ export function getStudentIDs() {
   }
 }
 
+/**
+ * @param {string} id id of the student
+ */
+export function deleteStudentByID(id) {
+  try {
+    const result = db.prepare(queries.deleteByID).run(id);
+    console.log(result);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export function getLastGRFromDB() {
   try {
     const result = db.prepare(queries.lastGR).get();
