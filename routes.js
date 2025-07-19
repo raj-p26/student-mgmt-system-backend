@@ -1,7 +1,7 @@
 import * as db from "./db.js";
 import fs from "node:fs";
 import csv from "csv-parser";
-import { v4 } from "uuid";
+// import { v4 } from "uuid";
 
 const STREAM = "bcom";
 
@@ -15,20 +15,6 @@ const STREAM = "bcom";
  * @param {Response} res response object
  */
 export function addStudent(req, res) {
-  // if (!req.files) {
-  //   return res.status(400).json({ message: "No files" });
-  // }
-
-  // const files = {};
-
-  // for (const fieldName in req.files) {
-  //   const file = req.files[fieldName][0];
-  //   files[fieldName] = file.path;
-  // }
-
-  // req.body.id = req.headers.uuid;
-  // console.log(req.body);
-
   const err = db.insertStudent({ ...req.body });
 
   if (err != null) {
@@ -36,7 +22,6 @@ export function addStudent(req, res) {
     return res.status(500).send({ status: "failed", message: err });
   }
 
-  // res.send({ uuid: req.headers.uuid, status: "success" });
   res.send({ status: "success" });
 }
 
@@ -87,29 +72,19 @@ export async function studentByID(req, res) {
   }
 }
 
-// /**
-//  * @param {Request} req request object
-//  * @param {Response} res response object
-//  */
-// export async function deleteStudent(req, res) {
-//   const id = req.params.id;
-//   db.deleteStudentByID(id);
-//   res.send({ message: "see console" });
-// }
-
 /**
  * @param {Request} req request object
  * @param {Response} res response object
  */
 export async function deleteStudents(req, res) {
   const ids = req.body.ids;
-  // console.log(ids);
+  let err = null;
+  let deleted = false;
   ids.forEach((id) => {
-    db.deleteStudentByID(id);
+    [deleted, err] = db.deleteStudentByID(id);
   });
-  res.send({ status: "success" });
+  res.send({ status: deleted ? "success" : "failed", error: err });
 }
-// setSelectStudent(prev => prev.filter())
 
 /**
  * @deprecated no need for this too
@@ -209,13 +184,14 @@ export function getDocByID(req, res) {
 export function uploadCSV(req, res) {
   const values = req.files[0].buffer.toString();
   const stream = req.body["Stream"];
+  const semester = req.body["semester"];
 
   fs.writeFileSync("upload.csv", values);
   const results = [];
 
   fs.createReadStream("upload.csv")
     .pipe(csv())
-    .on("data", (data) => results.push({ ...data, stream }))
+    .on("data", (data) => results.push({ ...data, stream, semester }))
     .on("finish", () => {
       db.insertUsingCSVData(results);
     });

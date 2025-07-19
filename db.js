@@ -87,13 +87,16 @@ export function getStudentIDs() {
 
 /**
  * @param {string} id id of the student
+ * @returns {[boolean, string | null]} returns [false, error] if record deleted. [true, null] otherwise
  */
 export function deleteStudentByID(id) {
   try {
     const result = db.prepare(queries.deleteByID).run(id);
-    console.log(result);
+    if (result.changes === 0) throw new Error("No changes");
+    return [true, null];
   } catch (error) {
     console.log(error);
+    return [false, error];
   }
 }
 
@@ -173,36 +176,31 @@ export function updateStudent(student, id) {
     const result = db
       .prepare(queries.updateStudent)
       .run([
-        student.enrollment_no,
-        student.abc_id,
-        student.gr_no,
-        student.udisk_no,
-        student.aadhar_number,
+        student.Name,
+        student.Mobile_No,
+        student.Enrollment_No,
+        student.Email,
+        student.DOB,
+        student.Gender,
+        student.Address,
+        student.Pin_No,
+        student.City,
+        student.Category,
+        student.Taluka,
+        student.District,
+        student.ABCID,
+        student.AadharCard_No,
+        student.Exam_Name,
+        student.Passing_Year,
+        student.Seat_Number,
+        student.School_College,
+        student.is_disabled,
         student.stream,
         student.semester,
         student.main_subject,
-        student.first_secondary_subject,
-        student.tertiary_secondary_subject,
-        student.gender,
-        student.email,
-        student.whatsapp_no,
-        student.surname,
-        student.name,
-        student.fathername,
-        student.father_name,
-        student.mother_name,
-        student.address,
-        student.city,
-        student.district,
-        student.pincode,
-        student.birth_date,
-        student.birth_place,
-        student.caste,
         student.parent_contact_no,
-        student.last_organization_studied_from,
-        student.last_studied_year,
-        student.elective_course,
-        id,
+        student.institute_type,
+        id
       ]);
 
     return result.changes;

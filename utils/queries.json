@@ -17,7 +17,7 @@
   "has_bonafide": "SELECT COUNT(*) AS exists_ FROM bonafide_doc WHERE student_id = ?",
   "has_no-objection": "SELECT COUNT(*) AS exists_ FROM no_objection_doc WHERE student_id = ?",
   "has_first-trial": "SELECT COUNT(*) AS exists_ FROM first_trial_doc WHERE student_id = ?",
-  "updateStudent": "UPDATE students SET enrollment_no=?, abc_id=?, gr_no=?, udisk_no=?, aadhar_number=?, stream=?, semester=?, main_course=?, first_secondary_subject=?, tertiary_secondary_subject=?, student_gender=?, email=?, whatsapp_no=?, surname=?, name=?, fathername=?, father_name=?, mother_name=?, address=?, city=?, district=?, pincode=?, birth_date=?, birth_place=?, caste=?, parent_contact_no=?, last_organization_studied_from=?, last_studied_year=?, elective_course=? WHERE id=?",
+  "updateStudent": "UPDATE students SET Name=?, Mobile_No=?, Enrollment_No=?, Email=?, DOB=?, Gender=?, Address=?, Pin_No=?, City=?, Category=?, Taluka=?, District=?, ABCID=?, AadharCard_No=?, Exam_Name=?, Passing_Year=?, Seat_Number=?, School_College=?, is_disabled=?, stream=?, semester=?, main_subject=?, parent_contact_no=?, institute_type=? WHERE Sr_No=?",
   "getImage": "SELECT student_image FROM students WHERE id=?",
   "adminCreds": "SELECT 1 AS exists_ FROM administration WHERE username=? AND password_=?",
   "getDocByID": "SELECT bd.doc_name as bonafide, tc.doc_name as transfer_certificate, ft.doc_name as first_trial, noc.doc_name as no_objection FROM students s left JOIN bonafide_doc bd ON s.Sr_no = bd.student_id left JOIN tc_doc tc ON s.Sr_no = tc.student_id left JOIN first_trial_doc ft ON s.Sr_no = ft.student_id left JOIN no_objection_doc noc ON s.Sr_no = noc.student_id WHERE s.Sr_no=?;",
