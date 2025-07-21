@@ -4,11 +4,20 @@ import * as routes from "./routes.js";
 import { upload } from "./utils/validation-utils.js";
 import * as db from "./db.js";
 import multer from "multer";
+import * as fileRoutes from "./files.routes.js";
 
 const storage = multer.memoryStorage();
 const csvUploadMW = multer({ storage });
 
 const app = express();
+app.use(function (req, res, next) {
+  res.setHeader(
+    "Content-Security-Policy",
+    "default-src 'self'; img-src 'self' http://192.168.208.50:8000;"
+  );
+  next();
+});
+
 app.use(cors());
 app.use("/uploads", express.static("uploads"));
 app.use(express.json());
@@ -42,5 +51,8 @@ app.post("/:id/edit", upload.any(), routes.updateStudent);
 app.post("/admin-creds", upload.any(), routes.adminCredentials);
 
 app.post("/upload-csv", csvUploadMW.any(), routes.uploadCSV);
+
+/// experimental
+app.post("/upload-doc", upload.any(), fileRoutes.uploadDoc);
 
 export default app;

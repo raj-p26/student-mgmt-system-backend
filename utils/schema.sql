@@ -25,12 +25,13 @@ CREATE TABLE IF NOT EXISTS students (
     Passing_Year      VARCHAR(255),
     Seat_Number       VARCHAR(255),
     School_College    VARCHAR(255),
-    is_disabled       BOOLEAN DEFAULT FALSE,
+    is_disabled       VARCHAR(5) DEFAULT 'No',
     stream            VARCHAR(50),
     semester          varchar(255),
     main_subject      varchar(255),
     parent_contact_no varchar(255),
     institute_type    varchar(255),
+    batch_year        INTEGER,
     inserted_at       TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

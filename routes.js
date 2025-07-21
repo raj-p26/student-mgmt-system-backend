@@ -144,9 +144,9 @@ export function hasDocument(req, res) {
 export function updateStudent(req, res) {
   let student = { ...req.body };
 
-  db.updateStudent(student, req.params.id)
-    .then((result) => res.send({ result }))
-    .catch((err) => res.status(500).send({ err }));
+  const [changes, err] = db.updateStudent(student, req.params.id);
+  if (err) res.status(500).send({ status: "failed", error: err });
+  else res.send({ status: "success", changes });
 }
 
 /**
@@ -185,13 +185,23 @@ export function uploadCSV(req, res) {
   const values = req.files[0].buffer.toString();
   const stream = req.body["Stream"];
   const semester = req.body["semester"];
+  const batchYear = req.body["batch_year"];
+  const main_subject = req.body["main_subject"];
 
   fs.writeFileSync("upload.csv", values);
   const results = [];
 
   fs.createReadStream("upload.csv")
     .pipe(csv())
-    .on("data", (data) => results.push({ ...data, stream, semester }))
+    .on("data", (data) =>
+      results.push({
+        ...data,
+        stream,
+        semester,
+        batch_year: batchYear,
+        main_subject,
+      })
+    )
     .on("finish", () => {
       db.insertUsingCSVData(results);
     });

@@ -37,6 +37,7 @@ export function insertStudent(student) {
       student.main_subject,
       student.parent_contact_no,
       student.institute_type,
+      student.batch_year
     ]);
 
     if (!dbResult) throw new Error("DB Result empty");
@@ -200,13 +201,14 @@ export function updateStudent(student, id) {
         student.main_subject,
         student.parent_contact_no,
         student.institute_type,
+        student.batch_year,
         id
       ]);
 
-    return result.changes;
+    return [result.changes, null];
   } catch (err) {
     console.log(err);
-    return null;
+    return [null, err];
   }
 }
 
