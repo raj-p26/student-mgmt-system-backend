@@ -177,6 +177,25 @@ export function getDocByID(req, res) {
   });
 }
 
+export function bulkUpdateStudentSemester(req, res) {
+  const studentIDs = req.body.ids;
+  const semester = req.body.semester;
+  let [success, err] = [true, null];
+  // console.log("LOG", studentIDs, semester);
+
+  studentIDs.forEach((id) => {
+    try {
+      const result = db.updateStudentSemester(id, semester);
+      console.log("LOG", result);
+    } catch (e) {
+      [success, err] = [false, e];
+      return;
+    }
+  });
+
+  res.send({ status: success ? "success" : "failed", error: err });
+}
+
 /**
  * @param {Request} req request object
  * @param {Response} res response object

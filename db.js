@@ -253,6 +253,14 @@ export function docID(id) {
   return db.prepare(queries.getDocByID).get(id);
 }
 
+/**
+ * @param {string} id Sr_No of the student
+ * @param {string} sem Semester to be updated
+ */
+export function updateStudentSemester(id, sem) {
+  return db.prepare(queries.updateSemester).run(sem, id);
+}
+
 export function insertUsingCSVData(values) {
   try {
     values.forEach((val) => {

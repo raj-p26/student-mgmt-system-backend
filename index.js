@@ -5,22 +5,23 @@ import { upload } from "./utils/validation-utils.js";
 import * as db from "./db.js";
 import multer from "multer";
 import * as fileRoutes from "./files.routes.js";
+import { HOST } from "./utils/config.js";
 
 const storage = multer.memoryStorage();
 const csvUploadMW = multer({ storage });
 
 const app = express();
-app.use(function (req, res, next) {
-  res.setHeader(
-    "Content-Security-Policy",
-    "default-src 'self'; img-src 'self' http://192.168.208.50:8000;"
-  );
-  next();
-});
 
 app.use(cors());
 app.use("/uploads", express.static("uploads"));
 app.use(express.json());
+app.use((req, res, next) => {
+  res.setHeader(
+    "Content-Security-Policy",
+    `default-src: 'self'; img-src: 'self' ${HOST};`
+  );
+  next();
+});
 
 app.get("/", function (_, res) {
   res.send({ checkHealth: "done" });
@@ -42,6 +43,7 @@ app.get("/students/:id/has/:doc_type", routes.hasDocument);
 app.get("/students/:id/docs", routes.getDocByID);
 // app.delete("/students/:id", routes.deleteStudent);
 app.delete("/students/bulk-delete", routes.deleteStudents);
+app.patch("/students/bulk-update-semester", routes.bulkUpdateStudentSemester);
 
 app.get("/last-serial/:doc_type", routes.getLastSerial);
 app.post("/last-serial/", routes.incSerial);

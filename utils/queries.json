@@ -21,5 +21,6 @@
   "getImage": "SELECT student_image FROM students WHERE id=?",
   "adminCreds": "SELECT 1 AS exists_ FROM administration WHERE username=? AND password_=?",
   "getDocByID": "SELECT bd.doc_name as bonafide, tc.doc_name as transfer_certificate, ft.doc_name as first_trial, noc.doc_name as no_objection FROM students s left JOIN bonafide_doc bd ON s.Sr_no = bd.student_id left JOIN tc_doc tc ON s.Sr_no = tc.student_id left JOIN first_trial_doc ft ON s.Sr_no = ft.student_id left JOIN no_objection_doc noc ON s.Sr_no = noc.student_id WHERE s.Sr_no=?;",
-  "deleteByID": "DELETE FROM students WHERE Sr_No=?"
+  "deleteByID": "DELETE FROM students WHERE Sr_No=?",
+  "updateSemester": "UPDATE students SET semester=? WHERE Sr_No=?"
 }
