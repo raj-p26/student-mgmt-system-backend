@@ -181,12 +181,10 @@ export function bulkUpdateStudentSemester(req, res) {
   const studentIDs = req.body.ids;
   const semester = req.body.semester;
   let [success, err] = [true, null];
-  // console.log("LOG", studentIDs, semester);
 
   studentIDs.forEach((id) => {
     try {
-      const result = db.updateStudentSemester(id, semester);
-      console.log("LOG", result);
+      db.updateStudentSemester(id, semester);
     } catch (e) {
       [success, err] = [false, e];
       return;
@@ -205,7 +203,7 @@ export function uploadCSV(req, res) {
   const stream = req.body["Stream"];
   const semester = req.body["semester"];
   const batchYear = req.body["batch_year"];
-  const main_subject = req.body["main_subject"];
+  // const main_subject = req.body["main_subject"];
 
   fs.writeFileSync("upload.csv", values);
   const results = [];
@@ -218,7 +216,7 @@ export function uploadCSV(req, res) {
         stream,
         semester,
         batch_year: batchYear,
-        main_subject,
+        // main_subject,
       })
     )
     .on("finish", () => {
@@ -227,17 +225,3 @@ export function uploadCSV(req, res) {
 
   res.send({ status: "done" });
 }
-
-// module.exports = {
-//   addStudent,
-//   getStudents,
-//   studentByID,
-//   getStudentIDs,
-//   getLastGR,
-//   getLastSerial,
-//   incSerial,
-//   hasDocument,
-//   updateStudent,
-//   adminCredentials,
-//   getDocByID,
-// };

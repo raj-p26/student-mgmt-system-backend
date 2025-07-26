@@ -12,33 +12,36 @@ const db = new Database(DB_NAME);
 /** @returns {string | null} any errors occured from db */
 export function insertStudent(student) {
   try {
-    let dbResult = db.prepare(queries.insertStudent).run([
-      student.name,
-      student.whatsapp_no,
-      student.enrollment_no,
-      student.email,
-      student.birth_date,
-      student.gender,
-      student.address,
-      student.pincode,
-      student.city,
-      student.caste,
-      student.taluka,
-      student.district,
-      student.abc_id,
-      student.aadhar_number,
-      student.exam_name,
-      student.last_studied_year,
-      student.seat_number,
-      student.last_organization_studied_from,
-      student.is_disabled,
-      student.stream,
-      student.semester,
-      student.main_subject,
-      student.parent_contact_no,
-      student.institute_type,
-      student.batch_year
-    ]);
+    let dbResult = db
+      .prepare(queries.insertStudent)
+      .run([
+        student.name,
+        student.whatsapp_no,
+        student.enrollment_no,
+        student.email,
+        student.birth_date,
+        student.gender,
+        student.address,
+        student.pincode,
+        student.city,
+        student.caste,
+        student.taluka,
+        student.district,
+        student.abc_id,
+        student.aadhar_number,
+        student.exam_name,
+        student.last_studied_year,
+        student.seat_number,
+        student.last_organization_studied_from,
+        student.is_disabled,
+        student.stream,
+        student.semester,
+        student.compulsary_subject,
+        student.major_subject,
+        student.parent_contact_no,
+        student.institute_type,
+        student.batch_year,
+      ]);
 
     if (!dbResult) throw new Error("DB Result empty");
 
@@ -198,11 +201,12 @@ export function updateStudent(student, id) {
         student.is_disabled,
         student.stream,
         student.semester,
-        student.main_subject,
+        student.compulsary_subject,
+        student.major_subject,
         student.parent_contact_no,
         student.institute_type,
         student.batch_year,
-        id
+        id,
       ]);
 
     return [result.changes, null];
