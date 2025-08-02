@@ -1,9 +1,6 @@
 import * as db from "./db.js";
 import fs from "node:fs";
 import csv from "csv-parser";
-// import { v4 } from "uuid";
-
-const STREAM = "bcom";
 
 /**
  * @typedef {import("express").Request} Request
@@ -203,7 +200,7 @@ export function uploadCSV(req, res) {
   const stream = req.body["Stream"];
   const semester = req.body["semester"];
   const batchYear = req.body["batch_year"];
-  // const main_subject = req.body["main_subject"];
+  const institute_type = req.body["institute_type"];
 
   fs.writeFileSync("upload.csv", values);
   const results = [];
@@ -215,8 +212,8 @@ export function uploadCSV(req, res) {
         ...data,
         stream,
         semester,
+        institute_type,
         batch_year: batchYear,
-        // main_subject,
       })
     )
     .on("finish", () => {

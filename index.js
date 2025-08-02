@@ -6,6 +6,7 @@ import * as db from "./db.js";
 import multer from "multer";
 import * as fileRoutes from "./files.routes.js";
 import { HOST } from "./utils/config.js";
+import { feesRouter } from "./fee.routes.js";
 
 const storage = multer.memoryStorage();
 const csvUploadMW = multer({ storage });
@@ -22,6 +23,8 @@ app.use((req, res, next) => {
   );
   next();
 });
+
+app.use("/fee", feesRouter);
 
 app.get("/", function (_, res) {
   res.send({ checkHealth: "done" });
