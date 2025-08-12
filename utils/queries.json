@@ -23,6 +23,8 @@
   "getDocByID": "SELECT bd.doc_name as bonafide, tc.doc_name as transfer_certificate, ft.doc_name as first_trial, noc.doc_name as no_objection FROM students s left JOIN bonafide_doc bd ON s.Sr_no = bd.student_id left JOIN tc_doc tc ON s.Sr_no = tc.student_id left JOIN first_trial_doc ft ON s.Sr_no = ft.student_id left JOIN no_objection_doc noc ON s.Sr_no = noc.student_id WHERE s.Sr_no=?;",
   "deleteByID": "DELETE FROM students WHERE Sr_No=?;",
   "updateSemester": "UPDATE students SET semester=? WHERE Sr_No=?;",
+  "getFeeStructureBySemAndStream": "SELECT * FROM fee_structure WHERE semester=? AND stream=?;",
   "addFee": "INSERT INTO fee_structure(stream, semester, college_dev_fee, semester_fee, univ_sports_fee, library_fee, game_fee, test_fee, student_welfare_fund, cultural_activity_fee, stationary_fee, tuition_fee, entrance_fee, reservation_fee, univ_enrollment_fee, univ_dev_fee, practical_fee, e_library_fee, univ_exam_fee, late_fee) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
-  "allFees": "SELECT * FROM fee_structure;"
+  "allFees": "SELECT * FROM fee_structure;",
+  "deleteFeeStructureByID": "DELETE FROM fee_structure WHERE id=?;"
 }

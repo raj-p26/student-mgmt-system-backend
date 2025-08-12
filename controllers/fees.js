@@ -31,3 +31,24 @@ export function allFeesStructure(_, res) {
   const allFees = db.getAllFeeStructures();
   res.send(allFees);
 }
+
+/**
+ * @param {Request} req
+ * @param {Response} res
+ */
+export function deleteFeeStructureByID(req, res) {
+  const feeStructureID = req.params["id"];
+  const [deleted, err] = db.deleteFee(feeStructureID);
+
+  if (err !== null) {
+    return res.status(500).send({ status: "failed", error: err });
+  }
+
+  if (!deleted) {
+    return res
+      .status(409)
+      .send({ status: "failed", error: "Record not found" });
+  }
+
+  res.status(204).send({});
+}
