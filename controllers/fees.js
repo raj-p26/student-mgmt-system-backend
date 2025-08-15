@@ -13,7 +13,7 @@ import * as db from "../db/fees.js";
 export function addFees(req, res) {
   const feeStructure = req.body;
 
-  const [dbRes, err] = db.addFee(feeStructure);
+  const [dbRes, err] = db.addFeeStructure(feeStructure);
 
   if (err) {
     return res.status(500).send({ status: "failed", error: err });
@@ -38,7 +38,7 @@ export function allFeesStructure(_, res) {
  */
 export function deleteFeeStructureByID(req, res) {
   const feeStructureID = req.params["id"];
-  const [deleted, err] = db.deleteFee(feeStructureID);
+  const [deleted, err] = db.deleteFeeStructure(feeStructureID);
 
   if (err !== null) {
     return res.status(500).send({ status: "failed", error: err });
@@ -51,4 +51,24 @@ export function deleteFeeStructureByID(req, res) {
   }
 
   res.status(204).send({});
+}
+
+/**
+ * @param {Request} req
+ * @param {Response} res
+ */
+export function updateFeeStructureByID(req, res) {
+  const feeStructureID = req.params["id"];
+  const feeStructureData = req.body;
+
+  const [updated, err] = db.updateFeeStructure(
+    Object.values(feeStructureData),
+    feeStructureID
+  );
+
+  if (err !== null || !updated) {
+    return res.status(500).send({ status: "failed", error: err });
+  }
+
+  res.status(204).send({ status: "success", message: "Updated successfully" });
 }

@@ -6,7 +6,7 @@ import * as db from "./db.js";
 import multer from "multer";
 import * as fileRoutes from "./files.routes.js";
 import { HOST } from "./utils/config.js";
-import { feesRouter } from "./fee.routes.js";
+import { feeStructureRouter } from "./fee.routes.js";
 
 const storage = multer.memoryStorage();
 const csvUploadMW = multer({ storage });
@@ -16,7 +16,7 @@ const app = express();
 app.use(cors());
 app.use("/uploads", express.static("uploads"));
 app.use(express.json());
-app.use((req, res, next) => {
+app.use((_, res, next) => {
   res.setHeader(
     "Content-Security-Policy",
     `default-src: 'self'; img-src: 'self' ${HOST};`
@@ -24,7 +24,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/fee", feesRouter);
+app.use("/fee-structure", feeStructureRouter);
 
 app.get("/", function (_, res) {
   res.send({ checkHealth: "done" });

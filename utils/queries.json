@@ -24,7 +24,8 @@
   "deleteByID": "DELETE FROM students WHERE Sr_No=?;",
   "updateSemester": "UPDATE students SET semester=? WHERE Sr_No=?;",
   "getFeeStructureBySemAndStream": "SELECT * FROM fee_structure WHERE semester=? AND stream=?;",
-  "addFee": "INSERT INTO fee_structure(stream, semester, college_dev_fee, semester_fee, univ_sports_fee, library_fee, game_fee, test_fee, student_welfare_fund, cultural_activity_fee, stationary_fee, tuition_fee, entrance_fee, reservation_fee, univ_enrollment_fee, univ_dev_fee, practical_fee, e_library_fee, univ_exam_fee, late_fee) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+  "addFee": "INSERT INTO fee_structure(stream, semester, college_dev_fee, semester_fee, univ_sports_complex_fee, library_fee, sports_fee, test_fee, student_welfare_fund, cultural_activity_fee, stationary_fee, tuition_fee, entrance_fee, reservation_fee, univ_enrollment_fee, univ_dev_fee, practical_fee, e_library_fee, univ_exam_fee, late_fee) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);",
+  "updateFee": "UPDATE fee_structure SET stream=?, semester=?, college_dev_fee=?, semester_fee=?, univ_sports_complex_fee=?, library_fee=?, sports_fee=?, test_fee=?, student_welfare_fund=?, cultural_activity_fee=?, stationary_fee=?, tuition_fee=?, entrance_fee=?, reservation_fee=?, univ_enrollment_fee=?, univ_dev_fee=?, practical_fee=?, e_library_fee=?, univ_exam_fee=?, late_fee=? WHERE id=?;",
   "allFees": "SELECT * FROM fee_structure;",
   "deleteFeeStructureByID": "DELETE FROM fee_structure WHERE id=?;"
 }
