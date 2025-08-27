@@ -61,7 +61,7 @@ export function allStudents() {
 }
 
 /**
- * Returns either student or error.
+ * Returns either student or null.
  * @param {string} id ID of the student
  */
 export function getStudentByID(id) {
@@ -74,6 +74,18 @@ export function getStudentByID(id) {
   } catch {
     return null;
   }
+}
+
+/**
+ * @param {string} id id of the student
+ * @param {string} details string of comma-separated fields to fetch from the database table.
+ */
+export function getStudentDetailsByID(id, details) {
+  let student = db.prepare(
+    `select ${details} from students where Sr_No=?;`
+  ).get(id);
+
+  return student;
 }
 
 /**
@@ -91,7 +103,7 @@ export function getStudentIDs() {
 
 /**
  * @param {string} id id of the student
- * @returns {[boolean, string | null]} returns [false, error] if record deleted. [true, null] otherwise
+ * @returns {[boolean, string | null]} returns [true, null] if record deleted. [false, error] otherwise
  */
 export function deleteStudentByID(id) {
   try {

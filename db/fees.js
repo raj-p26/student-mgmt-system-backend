@@ -25,7 +25,7 @@ export function addFeeStructure(feeData) {
 
     if (structure !== undefined) return [null, "record exists"];
 
-    const result = db.prepare(queries.addFee).run(values);
+    const result = db.prepare(queries.addFeeStructure).run(values);
     return [result, null];
   } catch (e) {
     console.error(e);
@@ -34,7 +34,11 @@ export function addFeeStructure(feeData) {
 }
 
 export function getAllFeeStructures() {
-  return db.prepare(queries.allFees).all();
+  return db.prepare(queries.allFeeStructures).all();
+}
+
+export function feeStructureBySemAndStream(semester, stream) {
+  return db.prepare(queries.getFeeStructureBySemAndStream).get(semester, stream);
 }
 
 /**
@@ -58,12 +62,28 @@ export function deleteFeeStructure(feeID) {
 
 export function updateFeeStructure(feeStructure, id) {
   try {
-    const res = db.prepare(queries.updateFee).run(...feeStructure, id);
+    const res = db.prepare(queries.updateFeeStructure).run(...feeStructure, id);
     if (res.changes === 0) return [false, "record didn't update"];
 
     return [true, null];
   } catch (e) {
     console.error("Sqlite error:", e);
     return [null, e];
+  }
+}
+
+/**
+ * @param {string[]} feeDetails 
+ * @returns {string} any error that occured while doing transaction with the database
+ */
+export function addFee(feeDetails) {
+  try {
+    const res = db.prepare(queries.addFee).run(...feeDetails);
+    if (res.changes === 0) return "Not inserted";
+
+    return null;
+  } catch (e) {
+    console.error("Sqlite error:", e);
+    return e;
   }
 }

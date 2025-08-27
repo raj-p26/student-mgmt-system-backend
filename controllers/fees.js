@@ -10,7 +10,7 @@ import * as db from "../db/fees.js";
  * @param {Request} req
  * @param {Response} res
  */
-export function addFees(req, res) {
+export function addFeeStructure(req, res) {
   const feeStructure = req.body;
 
   const [dbRes, err] = db.addFeeStructure(feeStructure);
@@ -23,11 +23,18 @@ export function addFees(req, res) {
 }
 
 /**
- *
- * @param {Request} _
+ * @param {Request} req
  * @param {Response} res
  */
-export function allFeesStructure(_, res) {
+export function allFeesStructure(req, res) {
+  const stream = req.query["stream"];
+  const semester = req.query["semester"];
+
+  if (stream && semester) {
+    const feeStructure = db.feeStructureBySemAndStream(semester, stream);
+    return res.send(feeStructure);
+  }
+
   const allFees = db.getAllFeeStructures();
   res.send(allFees);
 }

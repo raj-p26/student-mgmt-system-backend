@@ -59,11 +59,14 @@ export async function getStudentIDs(_, res) {
  */
 export async function studentByID(req, res) {
   const id = req.params.id;
+  const fields = req.query["fields"];
 
-  let student = db.getStudentByID(id);
+  let student = fields
+    ? db.getStudentDetailsByID(id, fields)
+    : db.getStudentByID(id);
 
   if (student) {
-    res.send({ student });
+    res.send({ status: "success", student });
   } else {
     res.status(404).send({ message: "Not Found" });
   }

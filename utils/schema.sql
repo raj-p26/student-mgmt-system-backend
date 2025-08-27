@@ -104,3 +104,14 @@ CREATE TABLE IF NOT EXISTS fee_structure (
     late_fee                INTEGER,
     inserted_at             TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS fee_details(
+    id               INTEGER PRIMARY KEY AUTOINCREMENT,
+    student_id       INTEGER NOT NULL,
+    stream           VARCHAR(255) NOT NULL,
+    semester         INT(2) NOT NULL,
+    dd_no            VARCHAR(30) NOT NULL,
+    fee_doc_name     VARCHAR(255),
+    inserted_at      DATE DEFAULT CURRENT_DATE,
+    FOREIGN KEY(fee_structure_id) REFERENCES fee_structure(id)
+);
